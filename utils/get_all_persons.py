@@ -4,13 +4,14 @@ import databases
 from sqlalchemy import select
 import logging
 
+# створюється екземпляр классу логер
 logger = logging.getLogger(__name__)
 
-
+# Функція для отримання всіх записів з БД
 async def get_all_persons_from_db(db: databases.Database):
     logger.info("Запит на отримання всіх записів з БД")
 
-    # Формируем запрос на получение данных
+    # Формуємо запит на отримання даних
     query = select(
         Person.c.id,
         Person.c.name,
@@ -30,7 +31,7 @@ async def get_all_persons_from_db(db: databases.Database):
             logger.warning("Не знайдено жодного запису")
             raise HTTPException(status_code=404, detail="Person not found")
 
-        logger.info("Отримано всі данні зо містяться у базі даних")
+        logger.info("Отримано всі данні що містяться у базі даних")
         return persons
 
     except HTTPException as http_error:

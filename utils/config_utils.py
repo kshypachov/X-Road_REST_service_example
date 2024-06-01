@@ -2,14 +2,16 @@ import configparser
 import os
 import logging
 
+# створюється екземпляр классу логер
 logger = logging.getLogger(__name__)
 
+# функція для зчитування конфігураційного файлу
 def load_config(file_path: str, defaults: dict = None) -> configparser.ConfigParser:
     config = configparser.ConfigParser(defaults=defaults, interpolation=None)
     config.read(file_path)
     return config
 
-
+# функція для отримання значення параметрів з конфіг файлу за їх ім'ям
 def get_config_param(config: configparser.ConfigParser, section: str, param: str) -> str:
     if config.has_option(section, param):
         return config.get(section, param)
@@ -17,6 +19,7 @@ def get_config_param(config: configparser.ConfigParser, section: str, param: str
         logger.error(f"Missing required config parameter: [{section}] {param}")
         raise ValueError(f"Missing required config parameter: [{section}] {param}")
 
+# функція для формування url строки для підключення до бд
 def get_database_url(config: configparser.ConfigParser) -> str:
     db_user = get_config_param(config, 'database', 'username')
     db_password = get_config_param(config, 'database', 'password')
@@ -25,6 +28,7 @@ def get_database_url(config: configparser.ConfigParser) -> str:
     return f"mysql://{db_user}:{db_password}@{db_host}:3306/{db_name}"
 
 
+# функція для налаштування логування,
 def configure_logging(config: configparser.ConfigParser):
     log_filename = get_config_param(config, 'logging', 'filename')
     log_filemode = get_config_param(config, 'logging', 'filemode')

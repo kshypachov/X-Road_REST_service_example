@@ -4,25 +4,30 @@ import databases
 from sqlalchemy import select, update
 import logging
 
-
+# створюється екземпляр классу логер
 logger = logging.getLogger(__name__)
+
+# Функція для оновлення даних у БД
 async def update_person_in_db(update_data: dict, db: databases.Database):
     logger.info("Отримані данні для оновлення: %s", update_data)
 
+    # Створення запиту для пошуку запису у БД
     query = (
         select(
             Person.c.id,
         ).
         select_from(Person).
-        where(Person.c.UNZR == str(update_data.get("UNZR"))))
+        where(Person.c.unzr == str(update_data.get("unzr"))))
     person = await db.fetch_one(query)
 
+    # Якщо запис не знайдено
     if not person:
-        logger.warning("Запис з UNZR %s не знайдено", str(update_data.get("UNZR")))
+        logger.warning("Запис з UNZR %s не знайдено", str(update_data.get("unzr")))
         raise HTTPException(status_code=404, detail="Person not found")
 
     logger.info("Знайдено запис для оновлення: %s", person)
 
+    # Створення запиту на оновлення даних
     update_query = (
         update(Person)
         .where(Person.c.id == person["id"])
