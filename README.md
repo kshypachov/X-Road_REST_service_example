@@ -69,46 +69,8 @@ FastAPI_trembita_service/
 ## Документація
 
 Після запуску сервера ви можете отримати доступ до автоматичної документації API за наступними адресами:
-- Swagger UI: `http://127.0.0.1:8000/docs`
-- ReDoc: `http://127.0.0.1:8000/redoc`
-
-## Тестування
-
-1. **Встановлення залежностей для тестування**
-
-   Переконайтеся, що у вас встановлені залежності для тестування. Якщо вони перераховані в окремому файлі, такому як `requirements-test.txt`, виконайте:
-
-   ```bash
-   pip3 install -r requirements.txt
-   ```
-
-   Якщо всі залежності вказані в основному файлі `requirements.txt`, пропустіть цей крок.
-
-2. **Запуск тестів**
-
-   ```bash
-   pytest
-   ```
-
-   Цей проект використовує `pytest` для запуску тестів. Переконайтеся, що у вас встановлені всі необхідні залежності.
-
-3. **Приклад тесту**
-
-   Приклад простого тесту для FastAPI застосунку:
-
-   ```python
-   from fastapi.testclient import TestClient
-   from app.main import app
-
-   client = TestClient(app)
-
-   def test_read_main():
-       response = client.get("/")
-       assert response.status_code == 200
-       assert response.json() == {"message": "Hello World"}
-   ```
-
-   Цей тест перевіряє, що кореневий маршрут (`/`) повертає статус код 200 та очікувану JSON відповідь.
+- Swagger UI: `http://[адреса серверу]:8000/docs`
+- ReDoc: `http://[адреса серверу]:8000/redoc`
 
 ## Розгортання
 
@@ -130,7 +92,3 @@ gunicorn -k uvicorn.workers.UvicornWorker main:app
 ## Ліцензія
 
 Цей проект ліцензується відповідно до умов MIT License.
-
----
-
-Цей README.md файл містить усі необхідні розділи для розгортання і тестування проекту на FastAPI.
