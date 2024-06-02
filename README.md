@@ -21,7 +21,7 @@
 2. **Створення та активація віртуального середовища**
 
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate   # Для Windows: venv\Scripts\activate
    ```
 
@@ -78,7 +78,7 @@ FastAPI_trembita_service/
    Переконайтеся, що у вас встановлені залежності для тестування. Якщо вони перераховані в окремому файлі, такому як `requirements-test.txt`, виконайте:
 
    ```bash
-   pip install -r requirements.txt
+   pip3 install -r requirements.txt
    ```
 
    Якщо всі залежності вказані в основному файлі `requirements.txt`, пропустіть цей крок.
