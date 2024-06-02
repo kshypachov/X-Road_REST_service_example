@@ -78,7 +78,7 @@ FastAPI_trembita_service/
    Переконайтеся, що у вас встановлені залежності для тестування. Якщо вони перераховані в окремому файлі, такому як `requirements-test.txt`, виконайте:
 
    ```bash
-   pip install -r requirements-test.txt
+   pip install -r requirements.txt
    ```
 
    Якщо всі залежності вказані в основному файлі `requirements.txt`, пропустіть цей крок.
