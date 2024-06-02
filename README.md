@@ -48,14 +48,19 @@
 ```
 FastAPI_trembita_service/
 
-├── main.py         # Точка входу застосунку
-├── app/
-│   ├── main.py         # Точка входу застосунку
-│   ├── routers/        # Маршрути застосунку
-│   ├── models/         # Моделі даних
-│   ├── schemas/        # Схеми Pydantic
-│   ├── crud/           # Операції CRUD
-│   └── database.py     # Конфігурація бази даних
+├── main.py                # Точка входу застосунку
+├── config.ini             # Конфігурація проекту
+├── alembic.ini            # Конфігурація міграцій БД
+├── utils/
+│   ├── validations.py     # Валідація параметрів
+│   ├── update_person.py   # Оновлення запису у БД
+│   ├── get_person.py      # Пошук запису у БД за критеріем
+│   ├── get_all_persons.py # Отримання всіх записів БД
+│   ├── delete_person.py   # Видалення запису з БД
+│   ├── create_person.py   # Створення запису у БД
+│   └── config_utils.py    # Зчитування конфігураційного файлу
+├── models/
+│   └── person.py          # Моделі даних
 ├── requirements.txt    # Залежності проекту
 ├── README.md           # Документація
 ```
