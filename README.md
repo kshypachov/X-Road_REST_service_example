@@ -28,6 +28,7 @@
 3. **Встановлення залежностей**
 
    ```bash
+   sudo apt-get install -y libmariadb-dev gcc
    pip3 install -r requirements.txt
    ```
 
