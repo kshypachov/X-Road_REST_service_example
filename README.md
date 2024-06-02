@@ -28,7 +28,7 @@
 3. **Встановлення залежностей**
 
    ```bash
-   pip install -r requirements.txt
+   pip3 install -r requirements.txt
    ```
 
 ## Запуск застосунку
