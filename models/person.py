@@ -108,25 +108,3 @@ class PersonGet (PersonMainModel):
     rnokpp: Optional[str] = Field(None, max_length=128)
     passportNumber: Optional[str] = Field(None, max_length=128)
     unzr : Optional[str] = Field(None, max_length=128)
-
-#class PersonResponse(BaseModel):
-#    status: bool
-#    descr: str
-#    result: Union[dict, None]  # Результат запроса в формате JSON
-
-
-# Функция для валидации произвольного параметра
-# def validate_parameter(param_name: str, param_value: Any) -> bool:
-#     if param_name not in PersonMainModel.__fields__:
-#         raise ValueError(f"Parameter '{param_name}' is not a valid field of PersonMainModel")
-#
-#     # Создаем временный словарь с проверяемым значением
-#     temp_data = {param_name: param_value}
-#
-#     try:
-#         # Валидируем временный объект модели
-#         PersonMainModel(**temp_data)
-#         return True
-#     except Exception as e:
-#         print(f"Validation error for {param_name}: {e}")
-#         return False

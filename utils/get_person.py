@@ -94,10 +94,6 @@ async def get_person_by_params_from_db(params: dict, db: databases.Database):
         logger.warning("Помилка HTTP: %s", http_error)
         raise http_error
 
-    except databases.DatabaseError as db_error:
-        logger.error("Помилка під час виконання запиту до бази даних: %s", db_error)
-        raise HTTPException(status_code=500, detail="Failed to retrieve person from database")
-
     except Exception as e:
         logger.error("Помилка під час виконання запиту на отримання даних: %s", e)
         raise HTTPException(status_code=500, detail="Failed to retrieve person")

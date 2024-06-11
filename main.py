@@ -64,7 +64,7 @@ async def person_get_by_parameter(param:str, value: str, request: Request):
         raise HTTPException(status_code=422, detail="One from paramters is blank")
 
     try:
-        utils.validation.validate_parameter(param, value)
+        utils.validation.validate_parameter(param, value, models.person.PersonGet)
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -96,16 +96,25 @@ async def person_update(request: Request, person: models.person.PersonUpdate):
         return Response(status_code = 204)
     return {"message": "Person updated successfully"}
 
-
-@app.delete("/person")  # видаляемо запис, необхідно передати УНЗР для того щоб видалити людину
-async def person_delete(request: Request, person: models.person.PersonDelete):
+@app.delete("/person/{param}/{value}")  # видаляемо запис, необхідно передати УНЗР для того щоб видалити людину
+async def person_delete(param: str, value: str, request: Request):
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
 
-    logger.debug("Початок обробки запиту DELETE /person/ " + str(person))
-    delete_person = person.dict(exclude_none=True)
+    logger.debug("Початок обробки запиту DELETE /person/" + str(param) + "/" + str(value))
+
+    if not param.strip() or not value.strip():
+        logger.warning("Один з переданих параметрів не містить значення")
+        raise HTTPException(status_code=422, detail="One from paramters is blank")
+
+    try:
+        utils.validation.validate_parameter(param, value, models.person.PersonDelete)
+    except ValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    delete_person = {param : value}
     result = await delete_person_in_db(delete_person, database)
-    logger.debug("Обробку запиту DELETE /person/  завершено")
+    logger.debug("Обробку запиту DELETE /person/" + str(param) + "/" + str(value) + " завершено")
     if result == 0:
         # немає даних для видаленя
         return Response(status_code = 204)
