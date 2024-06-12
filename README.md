@@ -45,8 +45,6 @@
 
 Своренням та обслуговуванням структури БД, займається alembic. Для створення структури БД, виконайте наступні команди 
 
-alembic init alembic
-alembic init migrations
 alembic revision --autogenerate -m "Init migration"
 alembic upgrade head
 
@@ -80,6 +78,8 @@ FastAPI_trembita_service/
 │   └── config_utils.py    # Зчитування конфігураційного файлу
 ├── models/
 │   └── person.py          # Моделі даних
+├── migrations/
+│   └── env.py             # Підключення моделей для Alembic 
 ├── requirements.txt    # Залежності проекту
 ├── README.md           # Документація
 ```
