@@ -4,3 +4,4 @@ fastapi==0.111.0
 pydantic==2.7.2
 PyMySQL==1.1.0
 SQLAlchemy==2.0.30
+mariadb==1.1.10
