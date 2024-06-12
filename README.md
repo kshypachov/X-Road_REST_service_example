@@ -6,7 +6,7 @@
 
 ## Вимоги
 
-- Python 3.7+
+- Python 3.10+
 - Git (для клонування репозиторію)
 
 ## Встановлення
@@ -31,6 +31,24 @@
    sudo apt-get install -y libmariadb-dev gcc
    pip3 install -r requirements.txt
    ```
+
+4**Створення БД**
+
+Цей сервіс використовує MySQL (MariaDB). Створіть базу даних та кристувача на сервері СКБД.
+
+5**Конфігурування сервісу**
+
+У файлі alembic.ini відредагуйте строчку sqlalchemy.url = mariadb+mariadbconnector://user:pass@localhost/dbname
+У файлі config.ini відредагуте секцію [database] 
+
+6**Сворення таблиць**
+
+Своренням та обслуговуванням структури БД, займається alembic. Для створення структури БД, виконайте наступні команди 
+
+alembic init alembic
+alembic init migrations
+alembic revision --autogenerate -m "Init migration"
+alembic upgrade head
 
 ## Запуск застосунку
 
