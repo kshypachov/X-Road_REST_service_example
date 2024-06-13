@@ -2,8 +2,10 @@ import enum
 import sqlalchemy
 
 from pydantic import BaseModel, Field, validator, ValidationError
-from datetime import date
+from datetime import date, datetime
 from typing import Optional, Union, Any
+import re
+
 
 metadata = sqlalchemy.MetaData()
 
@@ -70,11 +72,32 @@ class PersonMainModel(BaseModel):
 
     @validator('unzr')
     def validate_unzr(cls, value):
-        # Удаляем все символы "-" из строки для проверки цифр и длины
-        digits_only = value.replace('-', '')
+        # Перевірка формата
+        if not re.match(r'^\d{8}-\d{5}$', value):
+            raise ValueError('UNZR must be in the format YYYYMMDD-XXXXC')
 
-        if digits_only and (not digits_only.isdigit() or len(digits_only) != 14):
-            raise ValueError('UNZR must be a 14 digit number')
+        # Розділ на частини
+        date_part, code_part = value.split('-')
+        year = int(date_part[:4])
+        month = int(date_part[4:6])
+        day = int(date_part[6:])
+
+        # Перевірка правильності дати
+        try:
+            datetime(year, month, day)
+        except ValueError:
+            raise ValueError('Invalid date in UNZR')
+
+        # Перевірка кода
+        code = int(code_part[:4])
+        if not (0 <= code <= 9999):
+            raise ValueError('Code in UNZR must be in the range from 0000 to 9999')
+
+        # Перевірка контрольної цифри
+        control_digit = int(code_part[4])
+        if not (0 <= control_digit <= 9):
+            raise ValueError('Invalid control digit in UNZR')
+
         return value
 
 
