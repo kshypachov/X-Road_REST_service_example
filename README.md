@@ -12,6 +12,7 @@
 
 - Python 3.10+
 - Git (для клонування репозиторію)
+- MariaDB 10.5+
 
 ## Встановлення
 
@@ -32,7 +33,7 @@
 3. **Встановлення залежностей**
 
    ```bash
-   sudo apt-get install -y libmariadb-dev gcc
+   sudo apt-get install -y libmariadb-dev gcc python3-dev 
    pip install -r requirements.txt
    ```
 
