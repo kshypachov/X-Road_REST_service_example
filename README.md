@@ -30,7 +30,7 @@ cd FastAPI_trembita_service
 
 #### Використання скрипта deploy.sh
 
-1. Відредагуйте скрипт `deploy.sh`, замінивши значення змінних `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST`, `DB_PORT`, `SERVICE_NAME` та `APP_MODULE` на ваші реальні дані.
+1. Відредагуйте скрипт `deploy.sh`, замінивши значення змінних `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST` та `DB_PORT` на ваші реальні дані.
 2. Зробіть файл виконуваним:
 
    ```bash
