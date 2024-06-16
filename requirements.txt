@@ -2,7 +2,7 @@ alembic==1.13.1
 databases==0.9.0
 fastapi==0.111.0
 pydantic==2.7.2
-PyMySQL==1.1.0
+PyMySQL==1.1.1
 SQLAlchemy==2.0.30
 mariadb==1.1.10
 aiomysql==0.2.0
