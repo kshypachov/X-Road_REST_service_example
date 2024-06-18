@@ -7,15 +7,27 @@ VENV_DIR="venv"
 DB_USER="your_db_user"
 DB_PASSWORD="your_db_password"
 DB_NAME="your_db_name"
-DB_HOST="your_db_host"
-DB_PORT="your_db_port"
+DB_HOST="localhost" # Використовується localhost для встановлення MariaDB на цьому сервері
+DB_PORT="3306"      # Порт за замовчуванням для MariaDB
 SERVICE_NAME="fastapi_trembita_service"
 APP_MODULE="main:app" # Вкажіть правильний модуль додатку
 
 # Встановлення системних залежностей
 echo "Встановлення системних залежностей..."
 sudo apt-get update
-sudo apt-get install -y libmariadb-dev gcc python3 python3-venv python3-dev git
+sudo apt-get install -y libmariadb-dev gcc python3 python3-venv python3-dev git mariadb-server
+
+# Запуск та налаштування MariaDB
+echo "Запуск та налаштування MariaDB..."
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+
+# Створення бази даних та користувача
+echo "Створення бази даних та користувача..."
+sudo mysql -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+sudo mysql -e "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 # Клонування репозиторію
 echo "Клонування репозиторію..."
