@@ -15,7 +15,15 @@ APP_MODULE="main:app" # Вкажіть правильний модуль дод�
 # Встановлення системних залежностей
 echo "Встановлення системних залежностей..."
 sudo apt-get update
-sudo apt-get install -y libmariadb-dev gcc python3 python3-venv python3-dev git mariadb-server
+sudo apt-get install -y curl libmariadb-dev gcc python3 python3-venv python3-dev git
+
+# Налаштування репозиторію MariaDB
+echo "Налаштування репозиторію MariaDB..."
+curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash
+
+# Встановлення MariaDB сервера
+echo "Встановлення MariaDB сервера..."
+sudo apt-get install -y mariadb-server
 
 # Запуск та налаштування MariaDB
 echo "Запуск та налаштування MariaDB..."
