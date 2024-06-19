@@ -11,13 +11,6 @@
 
 ## Встановлення
 
-### Клонування репозиторію
-
-```bash
-git clone https://github.com/kshypachov/FastAPI_trembita_service.git
-cd FastAPI_trembita_service
-```
-
 ### Встановлення за допомогою скрипта deploy.sh
 
 Ми додали скрипт `deploy.sh` для автоматизації процесу встановлення. Скрипт виконує наступні кроки:
@@ -45,6 +38,13 @@ cd FastAPI_trembita_service
    ```
 
 ### Ручне встановлення
+
+#### Клонування репозиторію
+
+```bash
+git clone https://github.com/kshypachov/FastAPI_trembita_service.git
+cd FastAPI_trembita_service
+```
 
 #### Створення та активація віртуального середовища
 
