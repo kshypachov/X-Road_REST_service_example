@@ -46,19 +46,30 @@ async def shutdown():
 
 
 @app.get("/person")  # отримати данні про всіх людей що містяться у базі заних
-async def person_get_all(request: Request):
+async def person_get_all(request: Request, queryId: str = None, userId: str = None):
+
     logger.debug("Початок обробки запиту GET /person")
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
+
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
 
     result = await get_all_persons_from_db(database)
     logger.debug("Обробку запиту GET /person завершено")
     return {"message": result}
 
 @app.get("/person/{param}/{value}") # робимо пошук даних за одним з параметрів
-async def person_get_by_parameter(param:str, value: str, request: Request):
+async def person_get_by_parameter(param:str, value: str, request: Request, queryId: str = None, userId: str = None):
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
+
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
 
     if not param.strip() or not value.strip():
         raise HTTPException(status_code=422, detail="One from paramters is blank")
@@ -73,9 +84,15 @@ async def person_get_by_parameter(param:str, value: str, request: Request):
     return {"message": result}
 
 @app.post("/person") # створюємо новий запис
-async def person_post(request: Request, person: models.person.PersonCreate):
+async def person_post(request: Request, person: models.person.PersonCreate, queryId: str = None, userId: str = None):
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
+
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
+
 
     logger.debug("Початок обробки запиту POST /person/ " + str(person))
     result = await create_person_in_db(dict(person), database)
@@ -83,9 +100,15 @@ async def person_post(request: Request, person: models.person.PersonCreate):
     return {"message": result}
 
 @app.put("/person") # оновлюємо запис
-async def person_update(request: Request, person: models.person.PersonUpdate):
+async def person_update(request: Request, person: models.person.PersonUpdate, queryId: str = None, userId: str = None):
+
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
+
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
 
     logger.debug("Початок обробки запиту PUT /person/ " + str(person))
     update_data = person.dict(exclude_none=True)
@@ -97,9 +120,15 @@ async def person_update(request: Request, person: models.person.PersonUpdate):
     return {"message": "Person updated successfully"}
 
 @app.delete("/person/{param}/{value}")  # видаляемо запис, необхідно передати УНЗР для того щоб видалити людину
-async def person_delete(param: str, value: str, request: Request):
+async def person_delete(param: str, value: str, request: Request, queryId: str = None, userId: str = None):
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
+
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
+
 
     logger.debug("Початок обробки запиту DELETE /person/" + str(param) + "/" + str(value))
 
