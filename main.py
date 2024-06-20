@@ -47,7 +47,6 @@ async def shutdown():
 
 @app.get("/person")  # отримати данні про всіх людей що містяться у базі заних
 async def person_get_all(request: Request, queryId: str = None, userId: str = None):
-
     logger.debug("Початок обробки запиту GET /person")
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
@@ -63,6 +62,7 @@ async def person_get_all(request: Request, queryId: str = None, userId: str = No
 
 @app.get("/person/{param}/{value}") # робимо пошук даних за одним з параметрів
 async def person_get_by_parameter(param:str, value: str, request: Request, queryId: str = None, userId: str = None):
+    logger.debug("Початок обробки запиту GET /person/" + str(param) + "/" + str(value))
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
 
@@ -85,6 +85,7 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
 
 @app.post("/person") # створюємо новий запис
 async def person_post(request: Request, person: models.person.PersonCreate, queryId: str = None, userId: str = None):
+    logger.debug("Початок обробки запиту POST /person/ " + str(person))
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
 
@@ -93,15 +94,13 @@ async def person_post(request: Request, person: models.person.PersonCreate, quer
     if userId:
         logger.info(f"Значення параметру запиту userId: {userId}")
 
-
-    logger.debug("Початок обробки запиту POST /person/ " + str(person))
     result = await create_person_in_db(dict(person), database)
     logger.debug("Обробку запиту POST /person/  завершено")
     return {"message": result}
 
 @app.put("/person") # оновлюємо запис
 async def person_update(request: Request, person: models.person.PersonUpdate, queryId: str = None, userId: str = None):
-
+    logger.debug("Початок обробки запиту PUT /person/ " + str(person))
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
 
@@ -110,7 +109,6 @@ async def person_update(request: Request, person: models.person.PersonUpdate, qu
     if userId:
         logger.info(f"Значення параметру запиту userId: {userId}")
 
-    logger.debug("Початок обробки запиту PUT /person/ " + str(person))
     update_data = person.dict(exclude_none=True)
     result = await update_person_in_db(update_data, database)
     logger.debug("Обробку запиту PUT /person/  завершено")
@@ -121,6 +119,7 @@ async def person_update(request: Request, person: models.person.PersonUpdate, qu
 
 @app.delete("/person/{param}/{value}")  # видаляемо запис, необхідно передати УНЗР для того щоб видалити людину
 async def person_delete(param: str, value: str, request: Request, queryId: str = None, userId: str = None):
+    logger.debug("Початок обробки запиту DELETE /person/" + str(param) + "/" + str(value))
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
 
@@ -128,9 +127,6 @@ async def person_delete(param: str, value: str, request: Request, queryId: str =
         logger.info(f"Значення параметру запиту queryId: {queryId}")
     if userId:
         logger.info(f"Значення параметру запиту userId: {userId}")
-
-
-    logger.debug("Початок обробки запиту DELETE /person/" + str(param) + "/" + str(value))
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
