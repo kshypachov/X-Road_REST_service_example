@@ -4,6 +4,21 @@
 PROJECT_DIR="FastAPI_trembita_service"
 VENV_DIR="venv"
 SERVICE_NAME="fastapi_trembita_service"
+CONFIG_FILE="config.ini"
+
+# Функція для зчитування параметрів з config.ini
+function get_config_value() {
+    local section=$1
+    local key=$2
+    local config_file=$3
+    local value=$(awk -F "=" '/\['"$section"'\]/{a=1}a==1&&$1~/'"$key"'/{gsub(/[ \t]+$/, "", $2); print $2; exit}' $config_file)
+    echo $value
+}
+
+# Отримання параметрів бази даних з config.ini
+DB_NAME=$(get_config_value "database" "name" $CONFIG_FILE)
+DB_USER=$(get_config_value "database" "username" $CONFIG_FILE)
+DB_PASSWORD=$(get_config_value "database" "password" $CONFIG_FILE)
 
 # Перевірка, чи скрипт запускається з папки FastAPI_trembita_service
 if [ "$(basename "$PWD")" != "$PROJECT_DIR" ]; then
@@ -37,5 +52,11 @@ if [ -d "$PROJECT_DIR" ]; then
 else
     echo "Клонований репозиторій не знайдено."
 fi
+
+# Видалення бази даних та користувача
+echo "Видалення бази даних та користувача..."
+sudo mysql -u$DB_USER -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_NAME;"
+sudo mysql -u$DB_USER -p$DB_PASSWORD -e "DROP USER IF EXISTS '$DB_USER'@'%';"
+sudo mysql -u$DB_USER -p$DB_PASSWORD -e "FLUSH PRIVILEGES;"
 
 echo "Видалення завершено!"
