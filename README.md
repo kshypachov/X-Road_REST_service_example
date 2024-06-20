@@ -7,15 +7,9 @@
 - Python 3.10+
 - Git (для клонування репозиторію)
 - MariaDB 10.5+
+- Ubuntu Server 24.04
 
 ## Встановлення
-
-### Клонування репозиторію
-
-```bash
-git clone https://github.com/kshypachov/FastAPI_trembita_service.git
-cd FastAPI_trembita_service
-```
 
 ### Встановлення за допомогою скрипта deploy.sh
 
@@ -44,6 +38,13 @@ cd FastAPI_trembita_service
    ```
 
 ### Ручне встановлення
+
+#### Клонування репозиторію
+
+```bash
+git clone https://github.com/kshypachov/FastAPI_trembita_service.git
+cd FastAPI_trembita_service
+```
 
 #### Створення та активація віртуального середовища
 
