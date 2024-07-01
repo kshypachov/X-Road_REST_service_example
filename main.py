@@ -20,7 +20,7 @@ try:
     configure_logging(config)
 
     logger = logging.getLogger(__name__)
-    logger.info("Running Urban Planning")
+    logger.info("Configuration loaded")
 
     # Отримуємо URL бази даних
     SQLALCHEMY_DATABASE_URL = get_database_url(config)
@@ -45,11 +45,11 @@ async def shutdown():
     await database.disconnect()
 
 
-@app.get("/person")  # отримати данні про всіх людей що містяться у базі заних
+@app.get("/person")  # отримати дані про всіх людей, що містяться у базі заних
 async def person_get_all(request: Request, queryId: str = None, userId: str = None):
     logger.debug("Початок обробки запиту GET /person")
     header = request.headers.get("uxp-transaction-id", "None")
-    logger.info("Значення хедеру uxp-transaction-id: " + header)
+    logger.info("Отримано запит GET /person з uxp-transaction-id: " + header)
 
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
@@ -64,7 +64,7 @@ async def person_get_all(request: Request, queryId: str = None, userId: str = No
 async def person_get_by_parameter(param:str, value: str, request: Request, queryId: str = None, userId: str = None):
     logger.debug("Початок обробки запиту GET /person/" + str(param) + "/" + str(value))
     header = request.headers.get("uxp-transaction-id", "None")
-    logger.info("Значення хедеру uxp-transaction-id: " + header)
+    logger.info("Отримано запит GET /person/{param} з uxp-transaction-id: " + header)
 
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
@@ -72,7 +72,8 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
         logger.info(f"Значення параметру запиту userId: {userId}")
 
     if not param.strip() or not value.strip():
-        raise HTTPException(status_code=422, detail="One from paramters is blank")
+        logger.warning("Один з переданих параметрів не містить значення")
+        raise HTTPException(status_code=422, detail="Search parameter is missing in request")
 
     try:
         utils.validation.validate_parameter(param, value, models.person.PersonGet)
@@ -87,7 +88,7 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
 async def person_post(request: Request, person: models.person.PersonCreate, queryId: str = None, userId: str = None):
     logger.debug("Початок обробки запиту POST /person/ " + str(person))
     header = request.headers.get("uxp-transaction-id", "None")
-    logger.info("Значення хедеру uxp-transaction-id: " + header)
+    logger.info("Отримано запит POST /person з uxp-transaction-id: " + header)
 
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
@@ -102,7 +103,7 @@ async def person_post(request: Request, person: models.person.PersonCreate, quer
 async def person_update(request: Request, person: models.person.PersonUpdate, queryId: str = None, userId: str = None):
     logger.debug("Початок обробки запиту PUT /person/ " + str(person))
     header = request.headers.get("uxp-transaction-id", "None")
-    logger.info("Значення хедеру uxp-transaction-id: " + header)
+    logger.info("Отримано запит PUT /person з uxp-transaction-id: " + header)
 
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
@@ -117,11 +118,11 @@ async def person_update(request: Request, person: models.person.PersonUpdate, qu
         return Response(status_code = 204)
     return {"message": "Person updated successfully"}
 
-@app.delete("/person/{param}/{value}")  # видаляемо запис, необхідно передати УНЗР для того щоб видалити людину
+@app.delete("/person/{param}/{value}")  # видаляємо запис, необхідно передати УНЗР для того щоб видалити людину
 async def person_delete(param: str, value: str, request: Request, queryId: str = None, userId: str = None):
     logger.debug("Початок обробки запиту DELETE /person/" + str(param) + "/" + str(value))
     header = request.headers.get("uxp-transaction-id", "None")
-    logger.info("Значення хедеру uxp-transaction-id: " + header)
+    logger.info("Отримано запит DELETE /person з uxp-transaction-id: " + header)
 
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
@@ -130,7 +131,7 @@ async def person_delete(param: str, value: str, request: Request, queryId: str =
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
-        raise HTTPException(status_code=422, detail="One from paramters is blank")
+        raise HTTPException(status_code=422, detail="Search parameter is missing in request")
 
     try:
         utils.validation.validate_parameter(param, value, models.person.PersonDelete)
