@@ -5,18 +5,18 @@ from sqlalchemy import insert, exc
 import logging
 import pymysql
 
-# створюється екземпляр классу логер
+# створюється екземпляр класу logger
 logger = logging.getLogger(__name__)
 
 
 # функція для створення нового запису у бд
 async def create_person_in_db(person_data: dict, db: databases.Database):
-    logger.info("Отримано данні для створення запису у базі даних: %s", person_data)
+    logger.info("Отримано дані для створення запису у базі даних: %s", person_data)
 
     query = insert(Person).values(person_data).returning(Person.c.id)
 
     try:
-        # виконуємо запит на створення
+        # виконуємо запит до БД на створення
         record_id = await db.fetch_one(query)
         logger.info("Створено запис з ID: " + str(record_id))
         return record_id
@@ -33,7 +33,7 @@ async def create_person_in_db(person_data: dict, db: databases.Database):
 
     except exc.SQLAlchemyError as sqle:
         # Інші помилки SQLAlchemy
-        logger.error("Помилка під час виконанні запиту на створення: %s", sqle)
+        logger.error("Помилка під час виконання запиту на створення: %s", sqle)
         raise HTTPException(status_code=500, detail="Database error")
 
     except Exception as e:
