@@ -64,7 +64,7 @@ async def person_get_all(request: Request, queryId: str = None, userId: str = No
 async def person_get_by_parameter(param:str, value: str, request: Request, queryId: str = None, userId: str = None):
     logger.debug("Початок обробки запиту GET /person/" + str(param) + "/" + str(value))
     header = request.headers.get("uxp-transaction-id", "None")
-    logger.info("Отримано запит GET /person/{param} з uxp-transaction-id: " + header)
+    logger.info(f"Отримано запит GET /person/{param} з uxp-transaction-id: " + header)
 
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
@@ -73,7 +73,7 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
-        raise HTTPException(status_code=422, detail="Search parameter is missing in request")
+        raise HTTPException(status_code=422, detail="Error in URL path, some values are missing")
 
     try:
         utils.validation.validate_parameter(param, value, models.person.PersonGet)
