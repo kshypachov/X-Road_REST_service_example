@@ -4,12 +4,12 @@ import databases
 from sqlalchemy import select, update
 import logging
 
-# створюється екземпляр классу логер
+# створюється екземпляр класу logger
 logger = logging.getLogger(__name__)
 
 # Функція для оновлення даних у БД
 async def update_person_in_db(update_data: dict, db: databases.Database):
-    logger.info("Отримані данні для оновлення: %s", update_data)
+    logger.info("Отримані дані для оновлення: %s", update_data)
 
     # Створення запиту для пошуку запису у БД
     query = (
