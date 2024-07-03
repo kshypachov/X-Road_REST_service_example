@@ -3,7 +3,7 @@ from models.person import PersonGet
 from typing import Any
 from fastapi import HTTPException
 
-# створюється екземпляр классу логер
+# створюється екземпляр класу logger
 logger = logging.getLogger(__name__)
 
 def validate_parameter(param_name: str, param_value: Any, validation_model: Any):

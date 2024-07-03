@@ -2,7 +2,7 @@ import configparser
 import os
 import logging
 
-# створюється екземпляр классу логер
+# створюється екземпляр класу logger
 logger = logging.getLogger(__name__)
 
 # функція для зчитування конфігураційного файлу
@@ -28,7 +28,7 @@ def get_database_url(config: configparser.ConfigParser) -> str:
     return f"mysql://{db_user}:{db_password}@{db_host}:3306/{db_name}"
 
 
-# функція для налаштування логування,
+# функція для налаштування логування
 def configure_logging(config: configparser.ConfigParser):
     log_filename = get_config_param(config, 'logging', 'filename')
     log_filemode = get_config_param(config, 'logging', 'filemode')

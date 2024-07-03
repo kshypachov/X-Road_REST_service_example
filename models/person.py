@@ -29,7 +29,7 @@ person_table = sqlalchemy.Table(
     sqlalchemy.Column("unzr", sqlalchemy.String(128), unique=True, nullable=False),
 )
 
-#Модель даних використовується для валідації даних що прийшли с запитом
+#Модель даних використовується для валідації даних що прийшли з запитом
 class PersonMainModel(BaseModel):
     name: str = Field(min_length=1, max_length=128)
     surname: str = Field( min_length=1, max_length=128)
@@ -96,7 +96,7 @@ class PersonMainModel(BaseModel):
         # Перевірка контрольної цифри
         control_digit = int(code_part[4])
         if not (0 <= control_digit <= 9):
-            raise ValueError('Invalid control digit in UNZR')
+            raise ValueError('Last symbol of UNZR is not a digit 0..9')
 
         return value
 
@@ -138,7 +138,7 @@ class PersonDelete(BaseModel):
         # Перевірка контрольної цифри
         control_digit = int(code_part[4])
         if not (0 <= control_digit <= 9):
-            raise ValueError('Invalid control digit in UNZR')
+            raise ValueError('Last symbol of UNZR is not a digit 0..9')
 
         return value
 

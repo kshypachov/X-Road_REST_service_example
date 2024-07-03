@@ -4,7 +4,7 @@ import databases
 from sqlalchemy import select, and_
 import logging
 
-# створюється екземпляр классу логер
+# створюється екземпляр класу logger
 logger = logging.getLogger(__name__)
 
 # async def get_person_by_rnokpp_from_db(rnokpp: str, db: databases.Database):
@@ -49,11 +49,11 @@ logger = logging.getLogger(__name__)
 #         raise HTTPException(status_code=500, detail="Failed to retrieve person")
 
 
-# Функія для пошуку записів за будь яким з полів
+# Функція для пошуку записів за будь-яким з полів
 async def get_person_by_params_from_db(params: dict, db: databases.Database):
     logger.info("Запит на отримання даних з параметрами: %s", params)
 
-    # Створюємо список умов для запиту
+    # Створюємо список умов для пошуку
     conditions = []
     for key, value in params.items():
         if hasattr(Person.c, key):
@@ -63,7 +63,7 @@ async def get_person_by_params_from_db(params: dict, db: databases.Database):
         logger.warning("Не надано жодного параметра для пошуку")
         raise HTTPException(status_code=400, detail="No search parameters provided")
 
-# створюємо запит длля отримання даних
+# створюємо запит до БД для отримання даних
     query = (
         select(
             Person.c.id,
@@ -87,7 +87,7 @@ async def get_person_by_params_from_db(params: dict, db: databases.Database):
             logger.warning("Запис з параметрами %s не знайдено", params)
             raise HTTPException(status_code=404, detail="Person not found")
 
-        logger.info("Отримано дані для запису: %s", person)
+        logger.info("Отримано дані наступного запису: %s", person)
         return person
 
     except HTTPException as http_error:
