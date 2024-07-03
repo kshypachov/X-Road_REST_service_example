@@ -48,7 +48,7 @@ class PersonMainModel(BaseModel):
 
     @validator('name', 'surname', 'patronym')
     def validate_name(cls, value):
-        if value and not all(char.isalpha() for char in value):
+        if value and not all(char.isalpha() or char == "'" for char in value):
             raise ValueError('Names must contain only alphabetic characters without space')
         return value
 

@@ -66,6 +66,7 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
     header = request.headers.get("uxp-transaction-id", "None")
     logger.info("Значення хедеру uxp-transaction-id: " + header)
 
+
     if queryId:
         logger.info(f"Значення параметру запиту queryId: {queryId}")
     if userId:
