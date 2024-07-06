@@ -7,48 +7,6 @@ import logging
 # створюється екземпляр класу logger
 logger = logging.getLogger(__name__)
 
-# async def get_person_by_rnokpp_from_db(rnokpp: str, db: databases.Database):
-#     logger.info("Запит на отримання даних RNOKPP: %s", rnokpp)
-#
-#     query = (
-#         select(
-#             Person.c.id,
-#             Person.c.firstname,
-#             Person.c.surname,
-#             Person.c.patronymic,
-#             Person.c.dateOfBirth,
-#             Person.c.gender,
-#             Person.c.rnokpp,
-#             Person.c.passportNumber,
-#             Person.c.unzr,
-#         )
-#         .select_from(Person)
-#         .where(Person.c.rnokpp == rnokpp)
-#     )
-#
-#     try:
-#         person = await db.fetch_one(query)
-#
-#         if not person:
-#             logger.warning("Запис з RNOKPP %s не знайдено", rnokpp)
-#             raise HTTPException(status_code=404, detail="Person not found")
-#
-#         logger.info("Отримано дані для запису: %s", person)
-#         return person
-#
-#     except HTTPException as http_error:
-#         logger.warning("Помилка HTTP: %s", http_error)
-#         raise http_error
-#
-#     except databases.DatabaseError as db_error:
-#         logger.error("Помилка під час виконання запиту до бази даних: %s", db_error)
-#         raise HTTPException(status_code=500, detail="Failed to retrieve person from database")
-#
-#     except Exception as e:
-#         logger.error("Помилка під час виконання запиту на отримання даних: %s", e)
-#         raise HTTPException(status_code=500, detail="Failed to retrieve person")
-
-
 # Функція для пошуку записів за будь-яким з полів
 async def get_person_by_params_from_db(params: dict, db: databases.Database):
     logger.info("Запит на отримання даних з параметрами: %s", params)
