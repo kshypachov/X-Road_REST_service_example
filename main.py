@@ -11,6 +11,7 @@ from utils.get_person import get_person_by_params_from_db
 from pydantic import ValidationError
 from utils.config_utils import load_config, get_database_url, configure_logging
 import utils.validation
+from utils import definitions
 
 # Завантажуємо конфігурацію
 try:

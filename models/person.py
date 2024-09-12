@@ -6,6 +6,8 @@ from datetime import date, datetime
 from typing import Optional, Union, Any
 import re
 
+from utils import definitions
+
 
 metadata = sqlalchemy.MetaData()
 
@@ -19,26 +21,26 @@ person_table = sqlalchemy.Table(
     "person",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String(128), nullable=False),
-    sqlalchemy.Column("surname", sqlalchemy.String(128), nullable=False),
-    sqlalchemy.Column("patronym", sqlalchemy.String(128)),
+    sqlalchemy.Column("name", sqlalchemy.String(definitions.name_len), nullable=False),
+    sqlalchemy.Column("surname", sqlalchemy.String(definitions.surname_len), nullable=False),
+    sqlalchemy.Column("patronym", sqlalchemy.String(definitions.patronym_len)),
     sqlalchemy.Column("dateOfBirth", sqlalchemy.Date, nullable=False),
     sqlalchemy.Column("gender", sqlalchemy.Enum(genderEnum), nullable=False),
-    sqlalchemy.Column("rnokpp", sqlalchemy.String(128), unique=True, nullable=False, index=True),
-    sqlalchemy.Column("passportNumber", sqlalchemy.String(128), unique=True, nullable=False),
-    sqlalchemy.Column("unzr", sqlalchemy.String(128), unique=True, nullable=False),
+    sqlalchemy.Column("rnokpp", sqlalchemy.String(definitions.rnokpp_len), unique=True, nullable=False, index=True),
+    sqlalchemy.Column("passportNumber", sqlalchemy.String(definitions.passport_number_len), unique=True, nullable=False),
+    sqlalchemy.Column("unzr", sqlalchemy.String(definitions.unzr_len), unique=True, nullable=False),
 )
 
 #Модель даних використовується для валідації даних що прийшли з запитом
 class PersonMainModel(BaseModel):
-    name: str = Field(min_length=1, max_length=128)
-    surname: str = Field( min_length=1, max_length=128)
-    patronym: str = Field(None, max_length=128)
+    name: str = Field(min_length=1, max_length=definitions.name_len)
+    surname: str = Field( min_length=1, max_length=definitions.surname_len)
+    patronym: str = Field(None, max_length=definitions.patronym_len)
     dateOfBirth: date
     gender: str
     rnokpp: str
     passportNumber: str
-    unzr: str
+    unzr: str = Field(None, min_length=definitions.unzr_len, max_length=definitions.unzr_len)
 
     @validator('dateOfBirth')
     def validate_date_of_birth(cls, value):
@@ -60,14 +62,14 @@ class PersonMainModel(BaseModel):
 
     @validator('rnokpp')
     def validate_rnokpp(cls, value):
-        if value and (not value.isdigit() or len(value) != 10):
-            raise ValueError('RNOKPP must be a 10 digit number')
+        if value and (not value.isdigit() or len(value) != definitions.rnokpp_len):
+            raise ValueError(f'RNOKPP must be a {definitions.rnokpp_len} digit number')
         return value
 
     @validator('passportNumber')
     def validate_pasport_num(cls, value):
-        if value and (not value.isdigit() or len(value) != 9):
-            raise ValueError('passportNum must be a 9 digit number')
+        if value and (not value.isdigit() or len(value) != definitions.passport_number_len):
+            raise ValueError(f'passportNum must be a {definitions.passport_number_len} digit number')
         return value
 
     @validator('unzr')
@@ -144,11 +146,11 @@ class PersonDelete(BaseModel):
 
 
 class PersonGet (PersonMainModel):
-    name: Optional[str] = Field(None, min_length=1, max_length=128)
-    surname: Optional[str] = Field(None, min_length=1, max_length=128)
-    patronym: Optional[str] = Field(None, max_length=128)
+    name: Optional[str] = Field(None, min_length=1, max_length=definitions.name_len)
+    surname: Optional[str] = Field(None, min_length=1, max_length=definitions.surname_len)
+    patronym: Optional[str] = Field(None, max_length=definitions.patronym_len)
     dateOfBirth: Optional[date] = Field(None)
     gender: Optional[str] = Field(None, max_length=128)
-    rnokpp: Optional[str] = Field(None, max_length=128)
-    passportNumber: Optional[str] = Field(None, max_length=128)
-    unzr : Optional[str] = Field(None, max_length=128)
+    rnokpp: Optional[str] = Field(None, max_length=definitions.rnokpp_len)
+    passportNumber: Optional[str] = Field(None, max_length=definitions.passport_number_len)
+    unzr : Optional[str] = Field(None, max_length=definitions.unzr_len)
