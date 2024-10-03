@@ -147,3 +147,4 @@ async def person_delete(param: str, value: str, request: Request, queryId: str =
         # немає даних для видаленя
         return Response(status_code = 204)
     return {"message": "Person deleted successfully"}
+
