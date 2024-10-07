@@ -37,10 +37,10 @@
 Щоб зібрати Docker-образ, виконайте наступну команду в кореневій директорії проєкту:
 
 ```bash
-docker build -t my-fastapi-app .
+docker build -t trembita-fastapi-sync .
 ```
 
-Ця команда створить Docker-образ з іменем `my-fastapi-app`, використовуючи Dockerfile, який знаходиться в поточній директорії.
+Ця команда створить Docker-образ з іменем `trembita-fastapi-sync`, використовуючи Dockerfile, який знаходиться в поточній директорії.
 
 ## Як запустити контейнер
 
@@ -54,7 +54,7 @@ docker run -it --rm -p 8000:8000 \
     -e DB_NAME=mydatabase \
     -e LOG_LEVEL=info \
     -e LOG_FILENAME="" \
-    my-fastapi-app
+    trembita-fastapi-sync
 ```
 
 - Прапор `-p 8000:8000` перенаправляє порт 8000 на локальній машині на порт 8000 всередині контейнера.
@@ -68,7 +68,7 @@ docker run -it --rm -p 8000:8000 \
 ```bash
 docker run -it --rm -p 8000:8000 \
     -v $(pwd)/config.ini:/app/config.ini \
-    my-fastapi-app
+    trembita-fastapi-sync
 ```
 
 - Прапор `-v $(pwd)/config.ini:/app/config.ini` монтує локальний файл конфігурації в контейнер за шляхом `/app/config.ini`.
@@ -104,7 +104,7 @@ docker logs <container_id>
 docker run -it --rm -p 8000:8000 \
     -e LOG_FILENAME="/var/log/app.log" \
     -v $(pwd)/logs:/var/log \
-    my-fastapi-app
+    trembita-fastapi-sync
 ```
 
 Тут `-v $(pwd)/logs:/var/log` монтує локальну директорію для збереження логів.
@@ -121,7 +121,7 @@ docker run -it --rm -p 8000:8000 \
     -e DB_HOST=mydbhost \
     -e DB_NAME=mydatabase \
     -e LOG_LEVEL=debug \
-    my-fastapi-app
+    trembita-fastapi-sync
 ```
 
 ## Використання конфігураційного файлу
