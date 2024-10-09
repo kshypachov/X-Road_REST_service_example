@@ -44,9 +44,7 @@ FastAPI_trembita_service/
 - Для ручного розгортання дивіться [тут](./docs/manual_installation.md).
 - Для розгортання за допомогою скрипта дивіться [тут](./docs/script_installation.md).
 - Для розгортання у Docker дивіться [тут](./docs/docker_installation.md).
-  sqlalchemy.url = mariadb+mariadbconnector://user:pass@localhost/dbname
-  ```
-  
+
 ## Видалення
 
 Ми додали скрипт `remove.sh` для автоматизації процесу видалення сервісу та очищення системи.
