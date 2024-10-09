@@ -114,6 +114,7 @@ pip install -r requirements.txt
   ```
 - У файлі `config.ini` відредагуйте секцію `[database]`:
   ```ini
+  db_type = mysql
   host = your_db_host
   port = your_db_port
   name = your_db_name
