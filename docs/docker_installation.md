@@ -48,6 +48,7 @@ docker build -t my-fastapi-app .
 
 ```bash
 docker run -it --rm -p 8000:8000 \
+    -e USE_ENV_CONFIG=true \
     -e DB_USER=myuser \
     -e DB_PASSWORD=mypassword \
     -e DB_HOST=mydbhost \
