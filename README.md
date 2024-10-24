@@ -44,6 +44,7 @@ FastAPI_trembita_service/
 - Для ручного розгортання дивіться [тут](./docs/manual_installation.md).
 - Для розгортання за допомогою скрипта дивіться [тут](./docs/script_installation.md).
 - Для розгортання у Docker дивіться [тут](./docs/docker_installation.md).
+- Для налаштування HTTPS зверніться до цієї інструкції [тут](./docs/https_nginx_reverse_proxy.md).
 
 ## Видалення
 
