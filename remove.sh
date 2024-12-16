@@ -55,8 +55,8 @@ fi
 
 # Видалення бази даних та користувача
 echo "Видалення бази даних та користувача..."
-sudo mysql -u$DB_USER -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_NAME;"
-sudo mysql -u$DB_USER -p$DB_PASSWORD -e "DROP USER IF EXISTS '$DB_USER'@'%';"
-sudo mysql -u$DB_USER -p$DB_PASSWORD -e "FLUSH PRIVILEGES;"
+sudo mysql -e "DROP DATABASE IF EXISTS $DB_NAME;"
+sudo mysql -e "DROP USER IF EXISTS '$DB_USER'@'%';"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 echo "Видалення завершено!"
