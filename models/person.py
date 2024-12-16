@@ -78,7 +78,7 @@ class PersonMainModel(BaseModel):
 
         # Якщо ні одна з умов не виконується то викликати виключення
         raise ValueError(
-            f'HassportNum must be a {definitions.passport_number_len} digit number or follow the format "AA 123456" with Cyrillic letters and 6 digits'
+            f'passportNum must be a {definitions.passport_number_len} digit number or follow the format "AA 123456" with Cyrillic letters and 6 digits'
         )
 
     @validator('unzr')
