@@ -68,9 +68,18 @@ class PersonMainModel(BaseModel):
 
     @validator('passportNumber')
     def validate_pasport_num(cls, value):
-        if value and (not value.isdigit() or len(value) != definitions.passport_number_len):
-            raise ValueError(f'passportNum must be a {definitions.passport_number_len} digit number')
-        return value
+        # Перевірка паспорта нового зразка
+        if value.isdigit() and len(value) == definitions.passport_number_len:
+            return value
+
+        # Перевірка паспорта старого зразка AA 123456
+        if re.match(r'^[А-Я]{2} \d{6}$', value):
+            return value
+
+        # Якщо ні одна з умов не виконується то викликати виключення
+        raise ValueError(
+            f'passportNum must be a {definitions.passport_number_len} digit number or follow the format "AA 123456" with Cyrillic letters and 6 digits'
+        )
 
     @validator('unzr')
     def validate_unzr(cls, value):
