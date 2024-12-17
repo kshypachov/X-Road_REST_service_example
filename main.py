@@ -22,6 +22,7 @@ try:
 
     logger = logging.getLogger(__name__)
     logger.info("Configuration loaded")
+    logger.debug("Debug message")
 
     # Встановлення обраного рівня логування для усіх логерів
     for logger_name in logging.root.manager.loggerDict:
