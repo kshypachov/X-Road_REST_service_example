@@ -24,11 +24,6 @@ try:
     logger.info("Configuration loaded")
     logger.debug("Debug message")
 
-    # Встановлення обраного рівня логування для усіх логерів
-    for logger_name in logging.root.manager.loggerDict:
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(logging.DEBUG)  # Заміни DEBUG на потрібний рівень
-
     # Отримуємо URL бази даних
     SQLALCHEMY_DATABASE_URL = get_database_url(config)
 except ValueError as e:

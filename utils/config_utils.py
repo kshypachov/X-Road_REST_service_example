@@ -82,30 +82,3 @@ def configure_logging(config: configparser.ConfigParser):
         datefmt=log_datefmt,
         level=getattr(logging, log_level, logging.DEBUG)
     )
-    # log_filename = get_config_param(config, 'logging', 'filename', 'LOG_FILENAME', default=None)
-    # log_filemode = get_config_param(config, 'logging', 'filemode', 'LOG_FILEMODE', default='a')
-    # log_format = get_config_param(config, 'logging', 'format', 'LOG_FORMAT', default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    # log_datefmt = get_config_param(config, 'logging', 'dateformat', 'LOG_DATEFORMAT', default='%Y-%m-%d %H:%M:%S')
-    # log_level = get_config_param(config, 'logging', 'level', 'LOG_LEVEL', default="DEBUG").upper()
-    #
-    # # Настройка корневого логера
-    # root_logger = logging.getLogger()
-    # root_logger.setLevel(getattr(logging, log_level, logging.DEBUG))
-    #
-    # # Удаляем существующие обработчики, чтобы избежать дублирования
-    # for handler in root_logger.handlers[:]:
-    #     root_logger.removeHandler(handler)
-    #
-    # handlers = [logging.StreamHandler()]  # Логи в консоль
-    # if log_filename:
-    #     handlers.append(logging.FileHandler(log_filename, mode=log_filemode))  # Логи в файл
-    #
-    # formatter = logging.Formatter(log_format, datefmt=log_datefmt)
-    # for handler in handlers:
-    #     handler.setFormatter(formatter)
-    #     root_logger.addHandler(handler)
-    #
-    # # Логи для Uvicorn
-    # logging.getLogger("uvicorn").setLevel(logging.DEBUG)
-    # logging.getLogger("uvicorn.error").setLevel(logging.DEBUG)
-    # logging.getLogger("uvicorn.access").setLevel(logging.DEBUG)
