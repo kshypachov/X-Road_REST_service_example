@@ -57,6 +57,12 @@ async def person_get_all(request: Request, queryId: str = None, userId: str = No
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
+    # Логування додаткових параметрів запиту Трембити
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
+
     result = await get_all_persons_from_db(database)
     logger.debug("Обробку запиту GET /person завершено")
     return {"message": result}
@@ -70,6 +76,12 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
     logger.info("Заголовки запиту:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
+
+    # Логування додаткових параметрів запиту Трембити
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
@@ -94,6 +106,12 @@ async def person_post(request: Request, person: models.person.PersonCreate, quer
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
+    # Логування додаткових параметрів запиту Трембити
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
+
     result = await create_person_in_db(dict(person), database)
     logger.debug("Обробку запиту POST /person/  завершено")
     return {"message": result}
@@ -107,6 +125,12 @@ async def person_update(request: Request, person: models.person.PersonUpdate, qu
     logger.info("Заголовки запиту:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
+
+    # Логування додаткових параметрів запиту Трембити
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
 
     update_data = person.dict(exclude_none=True)
     result = await update_person_in_db(update_data, database)
@@ -125,6 +149,12 @@ async def person_delete(param: str, value: str, request: Request, queryId: str =
     logger.info("Заголовки запиту:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
+
+    # Логування додаткових параметрів запиту Трембити
+    if queryId:
+        logger.info(f"Значення параметру запиту queryId: {queryId}")
+    if userId:
+        logger.info(f"Значення параметру запиту userId: {userId}")
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
