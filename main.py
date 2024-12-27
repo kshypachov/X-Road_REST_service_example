@@ -54,8 +54,8 @@ async def person_get_all(request: Request, queryId: str = None, userId: str = No
     # Логування всіх заголовків
     headers = dict(request.headers)
     logger.info("Заголовки запиту:")
-    for key, value in headers.items():
-        logger.info(f"    {key}: {value}")
+    for header_key, header_value in headers.items():
+        logger.info(f"    {header_key}: {header_value}")
 
     result = await get_all_persons_from_db(database)
     logger.debug("Обробку запиту GET /person завершено")
@@ -68,8 +68,8 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
     # Логування всіх заголовків
     headers = dict(request.headers)
     logger.info("Заголовки запиту:")
-    for key, value in headers.items():
-        logger.info(f"    {key}: {value}")
+    for header_key, header_value in headers.items():
+        logger.info(f"    {header_key}: {header_value}")
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
@@ -91,8 +91,8 @@ async def person_post(request: Request, person: models.person.PersonCreate, quer
     # Логування всіх заголовків
     headers = dict(request.headers)
     logger.info("Заголовки запиту:")
-    for key, value in headers.items():
-        logger.info(f"    {key}: {value}")
+    for header_key, header_value in headers.items():
+        logger.info(f"    {header_key}: {header_value}")
 
     result = await create_person_in_db(dict(person), database)
     logger.debug("Обробку запиту POST /person/  завершено")
@@ -105,8 +105,8 @@ async def person_update(request: Request, person: models.person.PersonUpdate, qu
     # Логування всіх заголовків
     headers = dict(request.headers)
     logger.info("Заголовки запиту:")
-    for key, value in headers.items():
-        logger.info(f"    {key}: {value}")
+    for header_key, header_value in headers.items():
+        logger.info(f"    {header_key}: {header_value}")
 
     update_data = person.dict(exclude_none=True)
     result = await update_person_in_db(update_data, database)
@@ -123,8 +123,8 @@ async def person_delete(param: str, value: str, request: Request, queryId: str =
     # Логування всіх заголовків
     headers = dict(request.headers)
     logger.info("Заголовки запиту:")
-    for key, value in headers.items():
-        logger.info(f"    {key}: {value}")
+    for header_key, header_value in headers.items():
+        logger.info(f"    {header_key}: {header_value}")
 
     if not param.strip() or not value.strip():
         logger.warning("Один з переданих параметрів не містить значення")
