@@ -2,10 +2,6 @@
 -- version 5.2.1deb3
 -- https://www.phpmyadmin.net/
 --
--- Хост: localhost:3306
--- Время создания: Окт 07 2024 г., 07:27
--- Версия сервера: 10.11.8-MariaDB-0ubuntu0.24.04.1
--- Версия PHP: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -17,15 +13,11 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- База данных: `py_service`
---
+
 
 -- --------------------------------------------------------
 
---
--- Структура таблицы `person`
---
+
 
 DROP TABLE IF EXISTS `person`;
 CREATE TABLE `person` (
@@ -41,11 +33,8 @@ CREATE TABLE `person` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Индексы сохранённых таблиц
---
 
 --
--- Индексы таблицы `person`
 --
 ALTER TABLE `person`
   ADD PRIMARY KEY (`id`),
@@ -54,11 +43,9 @@ ALTER TABLE `person`
   ADD UNIQUE KEY `ix_person_rnokpp` (`rnokpp`);
 
 --
--- AUTO_INCREMENT для сохранённых таблиц
 --
 
 --
--- AUTO_INCREMENT для таблицы `person`
 --
 ALTER TABLE `person`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
