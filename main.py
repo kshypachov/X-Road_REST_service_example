@@ -13,6 +13,16 @@ from utils.config_utils import load_config, get_database_url, configure_logging
 import utils.validation
 from utils import definitions
 
+# Цей сервіс є частиною навчальних матеріалів для розробників системи "Трембіта".
+# Сервіс як приклад логує всі HTTP-заголовки, які отримує з запитами.
+# У промисловому сервісі слід передбачити логування службових заголовків системи "Трембіта".
+# Перелік службових заголовків системи "Трембіта":
+# Uxp-Client
+# Uxp-Service
+# Uxp-Purpose-Ids
+# Uxp-Subject-Id
+
+
 # Завантажуємо конфігурацію
 try:
     config = load_config('config.ini')
