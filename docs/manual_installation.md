@@ -26,7 +26,7 @@ sudo apt-get install -y curl libmariadb-dev gcc python3 python3-venv python3-dev
 #### Налаштування репозиторію MariaDB
 Щоб встановити MariaDB версії 10.5 або вище, потрібно додати офіційний репозиторій:
 ```bash
-curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash
+curl -sS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash
 ```
 #### Встановлення MariaDB сервера
 ```bash
