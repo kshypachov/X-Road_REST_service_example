@@ -29,7 +29,7 @@
 Для того, щоб зібрати Docker-образ, необхідно:
 1. Клонувати репозиторій:
 ```bash
-git clone https://github.com/MadCat-88/Trembita_Py_R_SyncSrv.git
+wget https://raw.githubusercontent.com/kshypachov/FastAPI_trembita_service/master/deploy.sh
 ```
 2. Перейти до директорії з вебсервісом:
 ```bash
