@@ -64,7 +64,7 @@ CREATE USER IF NOT EXISTS 'your_db_user'@'%' IDENTIFIED BY 'your_db_password';
 - `your_db_user` – логін користувача БД;
 - `your_db_password`– пароль для даного користувача.
 
-6.4. Надати користувачеві повні права на базу даних, замінивши your_db_user на логін створеного на попередньому кроці користувача:
+6.4. Надати користувачеві повні права на базу даних, замінивши `your_db_name` на назву раніше створеної  БД а `your_db_user` на логін створеного на попередньому кроці користувача:
 ```sql
 GRANT ALL PRIVILEGES ON your_db_name.* TO 'your_db_user'@'%';
 ```
@@ -74,6 +74,7 @@ GRANT ALL PRIVILEGES ON your_db_name.* TO 'your_db_user'@'%';
 ```sql
 FLUSH PRIVILEGES;
 ```
+
 Базу даних та користувача успішно створено.
 
 6.6. Вийти з консолі MariaDB:
@@ -131,7 +132,7 @@ alembic upgrade head
 
 ### 14. Створити systemd unit-файл для запуску вебсервісу:
 
-**Примітка** Перед виконанням команди необхідно перевірити за допомого `pwd` що ви знаходитесь у директорії `Trembita_Py_R_SyncSrv`. 
+**Примітка** Перед виконанням команди необхідно перевірити за допомого `pwd` що ви знаходитесь у директорії `FastAPI_trembita_service`. 
 
 Створіть systemd unit-файл для запуску сервісу:
 
