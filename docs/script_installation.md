@@ -18,7 +18,7 @@
 1. Завантажити скрипт:
 
 ```bash
-wget https://raw.githubusercontent.com/MadCat-88/Trembita_Py_R_SyncSrv/master/deploy.sh
+wget https://raw.githubusercontent.com/kshypachov/FastAPI_trembita_service/master/deploy.sh
 ```
 
 2. Відредагувати скрипт `deploy.sh`, замінивши значення параметрів `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST` та `DB_PORT` на ваші реальні дані, де:
