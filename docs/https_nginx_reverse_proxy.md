@@ -84,13 +84,14 @@ sudo rm /etc/nginx/sites-enabled/default
 
 Згенерувати SSL сертифікат і приватний ключ можна за допомогою команди:
 ```bash
-    sudo openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -keyout /etc/ssl/private/nginx-selfsigned_ECDSA.key -out /etc/ssl/certs/nginx-selfsigned_ECDSA.crt -days 3650 -nodes
+    sudo openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -days 3650 -nodes
 ```
 
 Під час генерації буде запропоновано ввести деякі дані (наприклад, країну, організацію, домен). Для тестових цілей можна ввести будь-які значення.
 
 ## Перевірка конфігурації
 Щоб переконатися, що конфігурація Nginx правильна, необхідно виконати команду:
+
  ```bash
 sudo nginx -t
  ```
@@ -99,8 +100,10 @@ sudo nginx -t
 ## Перезапуск Nginx
 
 Після внесення змін необхідно перезавантажити Nginx:
+
 ```bash
 sudo systemctl restart nginx
  ```
+
 ##
 Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
