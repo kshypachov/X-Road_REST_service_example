@@ -85,13 +85,13 @@ exit
 ### 7. Клонувати репозиторій
 
 ```bash
-git clone https://github.com/MadCat-88/Trembita_Py_R_SyncSrv.git
+git clone https://github.com/kshypachov/FastAPI_trembita_service.git
 ```
 
 ### 8. Перейти до директорії з вебсервісом:
 
 ```bash
-cd Trembita_Py_R_SyncSrv
+cd FastAPI_trembita_service
 ```
 
 ### 9. Створити віртуальне середовище:
