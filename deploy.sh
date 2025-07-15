@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Змінні для конфігурації
-REPO_URL="https://github.com/kshypachov/FastAPI_trembita_service.git"
-PROJECT_DIR="FastAPI_trembita_service"
+REPO_URL="https://github.com/kshypachov/X-Road_REST_service_example.git"
+PROJECT_DIR="X-Road_REST_service_example"
 VENV_DIR="venv"
 DB_USER="your_db_user"
 DB_PASSWORD="your_db_password"
 DB_NAME="your_db_name"
 DB_HOST="localhost" # Використовується localhost для встановлення MariaDB на цьому сервері
 DB_PORT="3306"      # Порт за замовчуванням для MariaDB
-SERVICE_NAME="fastapi_trembita_service"
+SERVICE_NAME="x-road_rest_service_example"
 APP_MODULE="main:app" # Вкажіть правильний модуль додатку
 
 # Встановлення системних залежностей
@@ -70,7 +70,7 @@ alembic upgrade head
 echo "Створення unit файлу для systemd..."
 sudo bash -c "cat > /etc/systemd/system/$SERVICE_NAME.service" << EOL
 [Unit]
-Description=FastAPI Trembita Service
+Description=X-Road_REST_service_example
 After=network.target
 
 [Service]

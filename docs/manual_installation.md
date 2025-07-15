@@ -86,13 +86,13 @@ exit
 ### 7. Clone the repository:
 
 ```bash
-git clone https://github.com/kshypachov/FastAPI_trembita_service.git
+git clone https://github.com/kshypachov/X-Road_REST_service_example.git
 ```
 
 ### 8. Navigate to the project directory:
 
 ```bash
-cd FastAPI_trembita_service
+cd X-Road_REST_service_example
 ```
 
 ### 9. Create a virtual environment:
@@ -132,12 +132,12 @@ alembic upgrade head
 
 ### 14. Create a `systemd` unit file to run the web service:
 
-**Note:** Before executing the command, ensure you're in the `FastAPI_trembita_service` directory by running `pwd`.
+**Note:** Before executing the command, ensure you're in the `X-Road_REST_service_example` directory by running `pwd`.
 
 Create the unit file:
 
 ```bash
-sudo bash -c "cat > /etc/systemd/system/fastapi_trembita_service.service" << EOL
+sudo bash -c "cat > /etc/systemd/system/x-road_rest_service_example.service" << EOL
 [Unit]
 Description=FastAPI Trembita Service
 After=network.target
@@ -163,7 +163,7 @@ sudo systemctl daemon-reload
 ### 16. Enable the service to start on boot:
 
 ```bash
-sudo systemctl enable fastapi_trembita_service
+sudo systemctl enable x-road_rest_service_example
 ```
 
 ---

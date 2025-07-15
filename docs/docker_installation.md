@@ -30,11 +30,11 @@ To build the Docker image, follow these steps:
 
 1. Clone the repository:
 ```bash
-wget https://raw.githubusercontent.com/kshypachov/FastAPI_trembita_service/master/deploy.sh
+wget https://raw.githubusercontent.com/kshypachov/X-Road_REST_service_example/master/deploy.sh
 ```
 2. Navigate to the web service directory:
 ```bash
-cd FastAPI_trembita_service
+cd X-Road_REST_service_example
 ```
 3. Run the following command in the project root directory:
 ```bash

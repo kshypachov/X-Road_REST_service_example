@@ -18,7 +18,7 @@ To automate the installation and setup of the web service, a script named `deplo
 1. Download the script:
 
 ```bash
-wget https://raw.githubusercontent.com/kshypachov/FastAPI_trembita_service/master/deploy.sh
+wget https://raw.githubusercontent.com/kshypachov/X-Road_REST_service_example/master/deploy.sh
 ```
 
 2. Edit the `deploy.sh` script by replacing the values of `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST`, and `DB_PORT` with your actual data, where:

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Змінні для конфігурації
-PROJECT_DIR="FastAPI_trembita_service"
+PROJECT_DIR="X-Road_REST_service_example"
 VENV_DIR="venv"
-SERVICE_NAME="fastapi_trembita_service"
+SERVICE_NAME="x-road_rest_service_example"
 CONFIG_FILE="config.ini"
 
 # Функція для зчитування параметрів з config.ini
