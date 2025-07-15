@@ -4,24 +4,24 @@ import databases
 from sqlalchemy import select, and_
 import logging
 
-# створюється екземпляр класу logger
+# Create a logger instance
 logger = logging.getLogger(__name__)
 
-# Функція для пошуку записів за будь-яким з полів
+# Function to search for records by any of the fields
 async def get_person_by_params_from_db(params: dict, db: databases.Database):
-    logger.info("Запит на отримання даних з параметрами: %s", params)
+    logger.info("Request to retrieve data with parameters: %s", params)
 
-    # Створюємо список умов для пошуку
+    # Create a list of conditions for the search
     conditions = []
     for key, value in params.items():
         if hasattr(Person.c, key):
             conditions.append(getattr(Person.c, key) == value)
 
     if not conditions:
-        logger.warning("Не надано жодного параметра для пошуку")
+        logger.warning("No search parameters provided")
         raise HTTPException(status_code=400, detail="No search parameters provided")
 
-# створюємо запит до БД для отримання даних
+    # Create a database query to fetch data
     query = (
         select(
             Person.c.id,
@@ -42,16 +42,16 @@ async def get_person_by_params_from_db(params: dict, db: databases.Database):
         person = await db.fetch_all(query)
 
         if not person:
-            logger.warning("Запис з параметрами %s не знайдено", params)
+            logger.warning("No record found with parameters %s", params)
             raise HTTPException(status_code=404, detail="Person not found")
 
-        logger.info("Отримано дані наступного запису: %s", person)
+        logger.info("Retrieved record data: %s", person)
         return person
 
     except HTTPException as http_error:
-        logger.warning("Помилка HTTP: %s", http_error)
+        logger.warning("HTTP error occurred: %s", http_error)
         raise http_error
 
     except Exception as e:
-        logger.error("Помилка під час виконання запиту на отримання даних: %s", e)
+        logger.error("Error while executing data retrieval query: %s", e)
         raise HTTPException(status_code=500, detail="Failed to retrieve person")

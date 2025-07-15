@@ -1,4 +1,4 @@
-#Файл містить константи що використовуються багато разів у коді.
+# This file contains constants that are used multiple times throughout the code.
 
 name_len = 128
 surname_len = 128

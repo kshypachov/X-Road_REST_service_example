@@ -4,24 +4,25 @@ import databases
 from sqlalchemy import delete
 import logging
 
-# створюється екземпляр класу logger
+# Create a logger instance
 logger = logging.getLogger(__name__)
 
-# Функція для видалення запису з БД, необхідно передати словник (dict) виду {"unzr": "11111111-11111"}
-async def delete_person_in_db( person_data: dict, db: databases.Database):
-    logger.info("Отримані дані для видалення: %s", person_data)
+# Function to delete a record from the database.
+# Requires a dictionary in the form {"unzr": "11111111-11111"}
+async def delete_person_in_db(person_data: dict, db: databases.Database):
+    logger.info("Received data for deletion: %s", person_data)
 
-    query = (delete(Person).where(Person.c.unzr == str(person_data.get("unzr"))))
+    query = delete(Person).where(Person.c.unzr == str(person_data.get("unzr")))
 
     try:
         status = await db.execute(query)
-        logger.info("Кількість видалених записів: %d", status)
+        logger.info("Number of records deleted: %d", status)
 
         if status == 0:
-            logger.warning("Запис з UNZR %s не знайдено", person_data.get("unzr"))
+            logger.warning("Record with UNZR %s not found", person_data.get("unzr"))
             raise HTTPException(status_code=404, detail="Person not found")
         return status
 
     except Exception as e:
-        logger.error("Помилка під час виконання запиту на видалення: %s", e)
+        logger.error("Error while executing delete query: %s", e)
         raise

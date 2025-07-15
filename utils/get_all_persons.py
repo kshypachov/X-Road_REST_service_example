@@ -4,14 +4,14 @@ import databases
 from sqlalchemy import select
 import logging
 
-# створюється екземпляр класу logger
+# Create a logger instance
 logger = logging.getLogger(__name__)
 
-# Функція для отримання всіх записів з БД
+# Function to retrieve all records from the database
 async def get_all_persons_from_db(db: databases.Database):
-    logger.info("Запит на отримання всіх записів з БД")
+    logger.info("Request to retrieve all records from the database")
 
-    # Формуємо запит на отримання даних
+    # Prepare the query to fetch data
     query = select(
         Person.c.id,
         Person.c.name,
@@ -28,20 +28,20 @@ async def get_all_persons_from_db(db: databases.Database):
         persons = await db.fetch_all(query)
 
         if not persons:
-            logger.warning("Не знайдено жодного запису")
+            logger.warning("No records found")
             raise HTTPException(status_code=404, detail="Person not found")
 
-        logger.info("Отримано всі дані, що містяться у базі даних")
+        logger.info("Successfully retrieved all records from the database")
         return persons
 
     except HTTPException as http_error:
-        logger.warning("Помилка HTTP: %s", http_error)
+        logger.warning("HTTP error occurred: %s", http_error)
         raise http_error
 
     except databases.DatabaseError as db_error:
-        logger.error("Помилка під час виконання запиту до бази даних: %s", db_error)
+        logger.error("Database error occurred while executing the query: %s", db_error)
         raise HTTPException(status_code=500, detail="Failed to retrieve person from database")
 
     except Exception as e:
-        logger.error("Помилка під час виконання запиту на отримання даних: %s", e)
+        logger.error("Unexpected error occurred while retrieving data: %s", e)
         raise HTTPException(status_code=500, detail="Failed to retrieve person")

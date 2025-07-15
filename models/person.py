@@ -8,15 +8,13 @@ import re
 
 from utils import definitions
 
-
 metadata = sqlalchemy.MetaData()
-
 
 class genderEnum(str, enum.Enum):
     male = "male"
     female = "female"
 
-#Модель для взаємодії з базою даних через ORM
+# Model for interacting with the database via ORM
 person_table = sqlalchemy.Table(
     "person",
     metadata,
@@ -31,10 +29,10 @@ person_table = sqlalchemy.Table(
     sqlalchemy.Column("unzr", sqlalchemy.String(definitions.unzr_len), unique=True, nullable=False),
 )
 
-#Модель даних використовується для валідації даних що прийшли з запитом
+# Data model used for validating request data
 class PersonMainModel(BaseModel):
     name: str = Field(min_length=1, max_length=definitions.name_len)
-    surname: str = Field( min_length=1, max_length=definitions.surname_len)
+    surname: str = Field(min_length=1, max_length=definitions.surname_len)
     patronym: str = Field(None, max_length=definitions.patronym_len)
     dateOfBirth: date
     gender: str
@@ -68,43 +66,43 @@ class PersonMainModel(BaseModel):
 
     @validator('passportNumber')
     def validate_pasport_num(cls, value):
-        # Перевірка паспорта нового зразка
+        # Check for new format passport (digits only)
         if value.isdigit() and len(value) == definitions.passport_number_len:
             return value
 
-        # Перевірка паспорта старого зразка AA 123456
+        # Check for old format passport: AA 123456 (Cyrillic letters)
         if re.match(r'^[А-Я]{2} \d{6}$', value):
             return value
 
-        # Якщо ні одна з умов не виконується то викликати виключення
+        # If neither format matches, raise error
         raise ValueError(
-            f'passportNum must be a {definitions.passport_number_len} digit number or follow the format "AA 123456" with Cyrillic letters and 6 digits'
+            f'passportNumber must be a {definitions.passport_number_len} digit number or follow the format "AA 123456" with Cyrillic letters and 6 digits'
         )
 
     @validator('unzr')
     def validate_unzr(cls, value):
-        # Перевірка формата
+        # Format check
         if not re.match(r'^\d{8}-\d{5}$', value):
             raise ValueError('UNZR must be in the format YYYYMMDD-XXXXC')
 
-        # Розділ на частини
+        # Split into parts
         date_part, code_part = value.split('-')
         year = int(date_part[:4])
         month = int(date_part[4:6])
         day = int(date_part[6:])
 
-        # Перевірка правильності дати
+        # Date validity check
         try:
             datetime(year, month, day)
         except ValueError:
             raise ValueError('Invalid date in UNZR')
 
-        # Перевірка кода
+        # Code validity check
         code = int(code_part[:4])
         if not (0 <= code <= 9999):
             raise ValueError('Code in UNZR must be in the range from 0000 to 9999')
 
-        # Перевірка контрольної цифри
+        # Control digit check
         control_digit = int(code_part[4])
         if not (0 <= control_digit <= 9):
             raise ValueError('Last symbol of UNZR is not a digit 0..9')
@@ -125,28 +123,28 @@ class PersonDelete(BaseModel):
 
     @validator('unzr')
     def validate_unzr(cls, value):
-        # Перевірка формата
+        # Format check
         if not re.match(r'^\d{8}-\d{5}$', value):
             raise ValueError('UNZR must be in the format YYYYMMDD-XXXXC')
 
-        # Розділ на частини
+        # Split into parts
         date_part, code_part = value.split('-')
         year = int(date_part[:4])
         month = int(date_part[4:6])
         day = int(date_part[6:])
 
-        # Перевірка правильності дати
+        # Date validity check
         try:
             datetime(year, month, day)
         except ValueError:
             raise ValueError('Invalid date in UNZR')
 
-        # Перевірка кода
+        # Code validity check
         code = int(code_part[:4])
         if not (0 <= code <= 9999):
             raise ValueError('Code in UNZR must be in the range from 0000 to 9999')
 
-        # Перевірка контрольної цифри
+        # Control digit check
         control_digit = int(code_part[4])
         if not (0 <= control_digit <= 9):
             raise ValueError('Last symbol of UNZR is not a digit 0..9')
@@ -154,7 +152,7 @@ class PersonDelete(BaseModel):
         return value
 
 
-class PersonGet (PersonMainModel):
+class PersonGet(PersonMainModel):
     name: Optional[str] = Field(None, min_length=1, max_length=definitions.name_len)
     surname: Optional[str] = Field(None, min_length=1, max_length=definitions.surname_len)
     patronym: Optional[str] = Field(None, max_length=definitions.patronym_len)
@@ -162,4 +160,4 @@ class PersonGet (PersonMainModel):
     gender: Optional[str] = Field(None, max_length=128)
     rnokpp: Optional[str] = Field(None, max_length=definitions.rnokpp_len)
     passportNumber: Optional[str] = Field(None, max_length=definitions.passport_number_len)
-    unzr : Optional[str] = Field(None, max_length=definitions.unzr_len)
+    unzr: Optional[str] = Field(None, max_length=definitions.unzr_len)
