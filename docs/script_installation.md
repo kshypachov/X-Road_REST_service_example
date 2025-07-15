@@ -1,49 +1,52 @@
-## Інсталяція сервісу за допомогою скрипта автоматичного встановлення
+## Service Installation Using the Automatic Deployment Script
 
-Для автоматизації процесу встановлення та подальшої роботи вебсервісу було створено скрипт `deploy.sh`.
+To automate the installation and setup of the web service, a script named `deploy.sh` has been created.
 
-**Даний скрипт:**
+**This script:**
 
-1. Встановлює системні залежності для програмного забезпечення вебсервісу.
-2. Клонує репозиторій.
-3. Створює та активує віртуальне середовище.
-4. Встановлює залежності Python.
-5. Встановлює СУБД MariaDB
-6. Налаштовує конфігурацію бази даних.
-7. Створює структуру бази даних за допомогою Alembic.
-8. Створює файл системної служби типу systemd для запуску вебсервісу.
+1. Installs the required system dependencies for the web service.
+2. Clones the repository.
+3. Creates and activates a virtual environment.
+4. Installs Python dependencies.
+5. Installs the MariaDB database server.
+6. Configures the database.
+7. Creates the database schema using Alembic.
+8. Creates a systemd service unit file to run the web service.
 
-**Для того, щоб встановити даний вебсервіс за допомогою скрипта необхідно:**
+**To install the web service using the script:**
 
-1. Завантажити скрипт:
+1. Download the script:
 
 ```bash
 wget https://raw.githubusercontent.com/kshypachov/FastAPI_trembita_service/master/deploy.sh
 ```
 
-2. Відредагувати скрипт `deploy.sh`, замінивши значення параметрів `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST` та `DB_PORT` на ваші реальні дані, де:
+2. Edit the `deploy.sh` script by replacing the values of `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST`, and `DB_PORT` with your actual data, where:
 
-- [DB_NAME] – назва БД;
-- [DB_USER] – логін користувача БД;
-- [DB_PASSWORD] – пароль для даного користувача;
-- [DB_HOST] – ІР-адреса хоста, на якому знаходиться база даних;
-- [DB_PORT] – порт для підключення до БД
+- [DB_NAME] – name of the database;
+- [DB_USER] – database user login;
+- [DB_PASSWORD] – password for the specified user;
+- [DB_HOST] – IP address of the host where the database is located;
+- [DB_PORT] – port used to connect to the database.
 
-Скрипт створить та налаштує БД із зазначеними параметрами автоматично.
+The script will automatically create and configure the database using the provided parameters.
 
-3. Зробити файл виконуваним:
+3. Make the script executable:
 
 ```bash
 chmod +x deploy.sh
 ```
 
-4. Запустити скрипт:
+4. Run the script:
+
 ```bash
 ./deploy.sh
 ```
-Після закінчення роботи скрипта сервіс буде автоматично запущено та додано до автозапуску.
 
-Конфігурування сервісу здійснюється автоматично. Детально з інформацією щодо конфігураційних файлів можна ознайомитися в [настановах з конфігурації](./configuration.md).
+After the script finishes execution, the service will be automatically started and added to system startup.
 
-##
-Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
+The service will be configured automatically. For more details about configuration files, see the [configuration guide](./configuration.md).
+
+---
+
+Materials created with support from the EU Technical Assistance Project "Bangladesh e-governance (BGD)".

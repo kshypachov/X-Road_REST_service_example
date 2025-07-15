@@ -1,21 +1,21 @@
-## Конфігурація вебсервісу
+## Web Service Configuration
 
-Конфігурація вебсервісу виконується у файлах «config.ini» та «alembic.ini».
+Web service configuration is performed in the "config.ini" and "alembic.ini" files.
 
-У випадку, коли вебсервіс було встановлено за допомогою скрипта, виконувати додаткові налаштування не потрібно.
+If the web service was installed using a script, no additional configuration is required.
 
-У випадку, коли вебсервіс було встановлено вручну, необхідно відредагувати зазначені файли наступним чином:
+If the web service was installed manually, you need to edit these files as follows:
 
-1. У файлі `alembic.ini` необхідно відредагувати наступний рядок:
+1. In the `alembic.ini` file, edit the following line:
   ```ini
   sqlalchemy.url = mariadb+mariadbconnector://user:pass@localhost/dbname
   ```
-де: 
-- user – логін користувача БД;
-- pass – пароль даного користувача;
-- dbname – назва БД.
+where:
+- user – database user login;
+- pass – password for this user;
+- dbname – database name.
 
-2. У файлі `config.ini` необхідно відредагувати секцію `[database]`, а саме наступні параметри:
+2. In the `config.ini` file, edit the `[database]` section, specifically the following parameters:
 
   ```ini
   db_type = mysql
@@ -26,59 +26,59 @@
   password = your_db_password
   ```
 
-Значення конфігураційних параметрів для файлу `config.ini` наведено нижче:
+The configuration parameter values for the `config.ini` file are shown below:
 
    ```ini
    [database]
-   # Тип бази даних, яку ви використовуєте. Можливі значення: mysql або postgres
+   # Type of database you are using. Possible values: mysql or postgres
    db_type = mysql
    
-   # IP-адреса або доменне ім'я сервера бази даних
+   # IP address or domain name of the database server
    host = your_db_host
    
-   # Порт, через який здійснюється підключення до бази даних. За замовчуванням для MySQL це 3306
+   # Port through which the database connection is made. Default for MySQL is 3306
    port = your_db_port
    
-   # Ім'я бази даних, до якої потрібно підключитися
+   # Name of the database to connect to
    name = your_db_name
    
-   # Ім'я користувача для підключення до бази даних
+   # Username for database connection
    username = your_db_user
    
-   # Пароль користувача для підключення до бази даних
+   # User password for database connection
    password = your_db_password
    
    [logging]
-   # Шлях до файлу, куди буде записуватися лог
+   # Path to the file where the log will be written
    filename = path/to/fastapi_trembita_service.log
    
-   # filemode визначає режим, в якому буде відкритий файл логування.
-   # 'a' - дописувати до існуючого файлу
-   # 'w' - перезаписувати файл кожен раз при старті програми
+   # filemode determines the mode in which the log file will be opened.
+   # 'a' - append to existing file
+   # 'w' - overwrite file each time the program starts
    filemode = a
    
-   # format визначає формат повідомлень логування.
-   # %(asctime)s - час створення запису
-   # %(name)s - ім'я логгера
-   # %(levelname)s - рівень логування
-   # %(message)s - текст повідомлення
-   # %(pathname)s - шлях до файлу, звідки було зроблено виклик
-   # %(lineno)d - номер рядка у файлі, звідки було зроблено виклик
+   # format determines the format of log messages.
+   # %(asctime)s - record creation time
+   # %(name)s - logger name
+   # %(levelname)s - logging level
+   # %(message)s - message text
+   # %(pathname)s - path to the file where the call was made
+   # %(lineno)d - line number in the file where the call was made
    format = %(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s
    
-   # dateformat визначає формат дати в повідомленнях логування.
-   # Можливі формати можуть бути такими, як:
+   # dateformat determines the date format in log messages.
+   # Possible formats can be:
    # %Y-%m-%d %H:%M:%S - 2023-06-25 14:45:00
    # %d-%m-%Y %H:%M:%S - 25-06-2023 14:45:00
    dateformat = %H:%M:%S
    
-   # level визначає рівень логування. Найбільш детальний це DEBUG, за замовчуванням INFO
-   # DEBUG - докладна інформація, корисна для відлагодження роботи, логується вміст запитів та відповідей
-   # INFO - загальна інформація про стан виконання програми
-   # WARNING - попередження про можливі проблеми
-   # ERROR - помилки, які завадили нормальному виконанню
-   # CRITICAL - критичні помилки, що призводять до завершення програми
+   # level determines the logging level. Most detailed is DEBUG, default is INFO
+   # DEBUG - detailed information useful for debugging, logs request and response content
+   # INFO - general information about program execution
+   # WARNING - warnings about possible issues
+   # ERROR - errors that prevented normal execution
+   # CRITICAL - critical errors that lead to program termination
    level = DEBUG
    ```
 ##
-Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
+Materials created with support from the EU Technical Assistance Project "Bangladesh e-governance (BGD)".

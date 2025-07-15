@@ -1,57 +1,60 @@
-# Розгортання вебсрвісу в Docker
+# Deploying the Web Service in Docker
 
-## Вимоги
+## Requirements
 
-| ПЗ             |   Версія   | Примітка                     |
-|:---------------|:----------:|------------------------------|
-| MariaDB        | **10.5+**  |                              |
-| Docker         | **20.10+** |                              |
-| Docker Compose |   10.5+    | Якщо планується використання |
-| Git            |            | Для клонування репозиторію   |
+| Software        | Version    | Notes                         |
+|:----------------|:----------:|-------------------------------|
+| MariaDB         | **10.5+**  |                               |
+| Docker          | **20.10+** |                               |
+| Docker Compose  |   10.5+    | If planning to use it         |
+| Git             |            | For cloning the repository    |
 
-## Змінні оточення
+## Environment Variables
 
-Вебсервіс підтримує конфігурацію через змінні оточення. 
+The web service supports configuration via environment variables.
 
-Нижче наведено основні параметри:
+Below are the main parameters:
 
-- `USE_ENV_CONFIG`: Керує використанням змінних оточення для конфігурації. Якщо встановлено значення `true`, вебсервіс використовує змінні оточення замість конфігураційного файлу.
-- `DB_USER`: Ім'я користувача бази даних.
-- `DB_PASSWORD`: Пароль для підключення до бази даних.
-- `DB_HOST`: Адреса хоста бази даних.
-- `DB_NAME`: Ім'я бази даних.
-- `LOG_FILENAME`: Ім'я файлу для логування. Якщо значення параметра порожне, логи будуть виводитися в консоль (stdout).
-- `LOG_LEVEL`: Рівень логування (наприклад, `info`, `debug`).
-- `LOG_FILEMODE`: Режим роботи з логами (наприклад, `a` — додавання до існуючого файлу або `w` — перезапис).
+- `USE_ENV_CONFIG`: Enables the use of environment variables for configuration. If set to `true`, the web service will use environment variables instead of a config file.
+- `DB_USER`: Database username.
+- `DB_PASSWORD`: Password for connecting to the database.
+- `DB_HOST`: Database host address.
+- `DB_NAME`: Database name.
+- `LOG_FILENAME`: Log file name. If empty, logs will be printed to the console (stdout).
+- `LOG_LEVEL`: Logging level (e.g., `info`, `debug`).
+- `LOG_FILEMODE`: Log file mode (e.g., `a` — append, `w` — overwrite).
 
-## Збір Docker-образу
+## Building the Docker Image
 
-Для того, щоб зібрати Docker-образ, необхідно:
-1. Клонувати репозиторій:
+To build the Docker image, follow these steps:
+
+1. Clone the repository:
 ```bash
 wget https://raw.githubusercontent.com/kshypachov/FastAPI_trembita_service/master/deploy.sh
 ```
-2. Перейти до директорії з вебсервісом:
+2. Navigate to the web service directory:
 ```bash
 cd FastAPI_trembita_service
 ```
-3. Виконати наступну команду в кореневій директорії проєкту:
+3. Run the following command in the project root directory:
 ```bash
 sudo docker build -t my-fastapi-app .
 ```
 
-Дана команда створить Docker-образ з іменем `my-fastapi-app`, використовуючи Dockerfile, який знаходиться в поточній директорії.
+This command will build a Docker image named `my-fastapi-app` using the Dockerfile in the current directory.
 
-## Створення бази даних для сервісу
-Хоча контейнер і має у своєму складі компонент alembic котрий може створювати структуру бази даних, але його запуск з контейнера не є зручним.
-Саме тому пропонується створити базу даних та її структуру вручну.
+## Creating the Database for the Service
 
-Для створення бази даних та її структури необхідно:
-1. Встановити СУБД MariaDB згідно настанов пунктів 2-5 [настанов з ручного встановлення вебсервісу](./manual_installation.md#2-додати-репозиторій-mariadb).
+Although the container includes Alembic, which can create the database structure, running it directly from the container is not convenient.  
+Therefore, it is recommended to create the database and its structure manually.
 
-2. Створити базу даних та користувача настанов пункту 6 [настанов з ручного встановлення вебсервісу](./manual_installation.md#6-створити-базу-даних-та-користувача-для-цього-необхідно).
+To create the database and its structure:
 
-3. Створити структуру таблиці за допомогою виконання наступної команди:
+1. Install MariaDB according to steps 2–5 of the [manual installation guide](./manual_installation.md#2-додати-репозиторій-mariadb).
+
+2. Create the database and user as described in step 6 of the [manual installation guide](./manual_installation.md#6-створити-базу-даних-та-користувача-для-цього-необхідно).
+
+3. Create the table structure by executing the following command:
 
 ```bash
 sudo mysql -e "USE your_db_name; CREATE TABLE IF NOT EXISTS \`person\` (
@@ -71,11 +74,11 @@ sudo mysql -e "USE your_db_name; CREATE TABLE IF NOT EXISTS \`person\` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 COMMIT;"
 ```
-де: `your_db_name` – назва БД, яка створена на попередньому кроці. 
+Where `your_db_name` is the name of the database created in the previous step.
 
-## Запуск та використання контейнера зі змінними оточення
+## Running and Using the Container with Environment Variables
 
-Щоб запустити контейнер з вебсервісом, необхідно виконати наступну команду:
+To run the container with the web service:
 
 ```bash
 sudo docker run -it --rm -p 8000:8000 \
@@ -88,19 +91,17 @@ sudo docker run -it --rm -p 8000:8000 \
     -e LOG_FILENAME="" \
     my-fastapi-app
 ```
-де:
-- параметр `-p 8000:8000` перенаправляє порт 8000 на локальній машині на порт 8000 всередині контейнера.
-- `DB_USER`: Ім'я користувача бази даних.
-- `DB_PASSWORD`: Пароль для підключення до бази даних.
-- `DB_HOST`: Адреса хоста бази даних.
-- `DB_NAME`: Назва бази даних.
-- Змінна `LOG_FILENAME=""` задає виведення логів у консоль (stdout).
 
-**Примітка:** У випадку розташування бази даних на одному хості з вебсервісом в значенні параметра `DB_HOST` необхідно вказувати IP-адресу хоста, значення `localhost` або `127.0.0.1` працювати не будуть. Окрім цього необхідно налаштувати зовнішні підключення до бази даних
+Where:
+- The `-p 8000:8000` flag maps port 8000 on the local machine to port 8000 inside the container.
+- `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_NAME` configure database access.
+- Setting `LOG_FILENAME=""` will output logs to the console (stdout).
 
-Якщо планується повністю використовувати змінні оточення для конфігурації, необхідно переконатись, що `USE_ENV_CONFIG=true`. 
+**Note:** If the database is hosted on the same machine as the web service, you must provide the host machine’s IP address in `DB_HOST`. `localhost` or `127.0.0.1` will not work in this case. You must also allow external connections to the database.
 
-Наприклад:
+If you plan to configure the service entirely using environment variables, make sure `USE_ENV_CONFIG=true`.
+
+Example:
 ```bash
 sudo docker run -it --rm -p 8000:8000 \
     -e USE_ENV_CONFIG=true \
@@ -112,10 +113,10 @@ sudo docker run -it --rm -p 8000:8000 \
     my-fastapi-app
 ```
 
-## Запуск та використання контейнера з конфігураційним файлом
+## Running and Using the Container with a Configuration File
 
-Контейнер з вебсервісом можна запустити використовуючи конфігураційний файл замість змінних оточення. 
-Для цього необхідно створити файл `config.ini` в директорії вебсервіса та вказати шлях до нього
+You can also run the web service container using a configuration file instead of environment variables.  
+To do so, create a `config.ini` file in the web service directory and mount it into the container:
 
 ```bash
 sudo docker run -it --rm -p 8000:8000 \
@@ -123,9 +124,9 @@ sudo docker run -it --rm -p 8000:8000 \
     my-fastapi-app
 ```
 
-де параметр `-v $(pwd)/config.ini:/app/config.ini` монтує локальний файл конфігурації в контейнер за шляхом `/app/config.ini`.
+Here, the `-v $(pwd)/config.ini:/app/config.ini` flag mounts your local `/app/config.ini` file into the container.
 
- **Приклад конфігураційного файлу `config.ini`:**
+**Example `config.ini` file:**
 
 ```ini
 [database]
@@ -143,17 +144,18 @@ dateformat = %Y-%m-%d %H:%M:%S
 level = info
 ```
 
-Якщо змінна оточення `USE_ENV_CONFIG` не задана або встановлене значення `false`, вебсервіс буде використовувати конфігураційний файл для налаштування. Необхідно переконатись, що файл доступний у контейнері, як показано в даному розділі вище.
+If the `USE_ENV_CONFIG` variable is unset or set to `false`, the service will use the configuration file instead.  
+Make sure the file is available in the container as shown above.
 
-## Перегляд журналів подій
+## Viewing Logs
 
-Якщо виведення журналів подій налаштоване у консоль, переглядати їх можна за допомогою команди:
+If logs are configured to be output to the console, you can view them with:
 
 ```bash
 docker logs <container_id>
 ```
 
-В разі, якщо журнали подій зберігаються у файл (через змінну оточення `LOG_FILENAME` або конфігураційний файл), можна налаштувати монтування директорії з журналами подій на локальній машині наступним чином:
+If logs are stored in a file (via the `LOG_FILENAME` variable or config file), you can mount a local directory for logs as follows:
 
 ```bash
 docker run -it --rm -p 8000:8000 \
@@ -162,7 +164,8 @@ docker run -it --rm -p 8000:8000 \
     my-fastapi-app
 ```
 
-де параметр `-v $(pwd)/logs:/var/log` монтує локальну директорію для збереження журналів подій.
+Where the `-v $(pwd)/logs:/var/log` flag mounts your local logs directory into the container.
 
-##
-Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
+---
+
+Materials created with support from the EU Technical Assistance Project "Bangladesh e-governance (BGD)".

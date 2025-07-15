@@ -1,109 +1,116 @@
-# Налаштування HTTPS
+# HTTPS Configuration
 
-Даний розділ спрямований на налаштування Nginx у режимі reverse proxy для перенаправлення запитів від клієнтів до REST сервісу.
+This section describes how to configure Nginx as a reverse proxy to forward client requests to the REST service.
 
-Nginx буде виступати посередником між клієнтом і сервісом. Для захисту трафіку буде використаний самопідписаний SSL сертифікат.
+Nginx will act as an intermediary between the client and the service. To secure the traffic, a self-signed SSL certificate will be used.
 
-## Загальні передумови
-Перед налаштуванням Nginx, необхідно переконатися, що на сервері з вебсервісом встановлені наступні компоненти:
+## General Prerequisites
 
-| ПЗ      |  Версія   | Примітка                       |
-|:--------|:---------:|--------------------------------|
-| Nginx   | **1.18+** |                                |
-| OpenSSL |           | Для генерації SSL сертифікатів |                                                                                                                                                                            |
+Before configuring Nginx, ensure that the following components are installed on the server hosting the web service:
 
+| Software | Version   | Notes                             |
+|:---------|:---------:|------------------------------------|
+| Nginx    | **1.18+** |                                    |
+| OpenSSL  |           | For generating SSL certificates    |
 
-## Встановлення Nginx 
+## Installing Nginx
 
-1. Оновити список пакетів:
-    ```bash
-    sudo apt update
-    ```
-2. Встановити Nginx:
-    ```bash
-    sudo apt install nginx
+1. Update the package list:
+   ```bash
+   sudo apt update
    ```
-   ## Налаштування Nginx як Reverse Proxy
 
-1. Перейти до директорії з конфігураціями:
-    ```bash
-    cd /etc/nginx/sites-available
-    ```
+2. Install Nginx:
+   ```bash
+   sudo apt install nginx
+   ```
 
-2. Створити новий файл конфігурації для REST сервісу. Наприклад, `rest_service`:
-    ```bash
-    sudo nano /etc/nginx/sites-available/rest_service
-    ```
-3. Додати наступну конфігурацію для reverse proxy:
-    ```nginx
-    server {
-        listen 80;
-        server_name _;
-        
-        location / {
-            proxy_pass http://127.0.0.1:8000;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-    }
+## Configuring Nginx as a Reverse Proxy
 
-    server {
-        listen 443 ssl;
-        server_name _;
+1. Navigate to the configuration directory:
+   ```bash
+   cd /etc/nginx/sites-available
+   ```
 
-        ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
-        ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+2. Create a new configuration file for the REST service, e.g., `rest_service`:
+   ```bash
+   sudo nano /etc/nginx/sites-available/rest_service
+   ```
 
-        location / {
-            proxy_pass http://127.0.0.1:8000;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-    }
-    ```
-4. Створити символічне посилання на конфігурацію в директорії `sites-enabled`:
-    ```bash
-    sudo ln -s /etc/nginx/sites-available/rest_service /etc/nginx/sites-enabled/
-    ```   
+3. Add the following reverse proxy configuration:
+   ```nginx
+   server {
+       listen 80;
+       server_name _;
 
-5. Переконатись, що символічне посилання створено коректно:
-    ```bash
-    ls -l /etc/nginx/sites-enabled/
-    ```
-6. Видалити символічне посилання на файл `default` яке знаходиться у директорії /etc/nginx/sites-enabled
+       location / {
+           proxy_pass http://127.0.0.1:8000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
 
-```bash
-sudo rm /etc/nginx/sites-enabled/default
-``` 
+   server {
+       listen 443 ssl;
+       server_name _;
 
-## Генерація самопідписаного SSL сертифіката
+       ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+       ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 
-Згенерувати SSL сертифікат і приватний ключ можна за допомогою команди:
+       location / {
+           proxy_pass http://127.0.0.1:8000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+4. Create a symbolic link to the configuration in the `sites-enabled` directory:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/rest_service /etc/nginx/sites-enabled/
+   ```
+
+5. Ensure the symbolic link was created correctly:
+   ```bash
+   ls -l /etc/nginx/sites-enabled/
+   ```
+
+6. Remove the default symbolic link from `/etc/nginx/sites-enabled`:
+   ```bash
+   sudo rm /etc/nginx/sites-enabled/default
+   ```
+
+## Generating a Self-Signed SSL Certificate
+
+Generate an SSL certificate and private key using the following command:
 ```bash
 sudo openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -days 3650 -nodes
 ```
 
-Під час генерації буде запропоновано ввести деякі дані (наприклад, країну, організацію, домен). Для тестових цілей можна ввести будь-які значення.
+During generation, you will be prompted to enter some information (e.g., country, organization, domain). For testing purposes, you can use arbitrary values.
 
-## Перевірка конфігурації
-Щоб переконатися, що конфігурація Nginx правильна, необхідно виконати команду:
+## Validating the Configuration
 
- ```bash
+To verify that the Nginx configuration is correct, run:
+
+```bash
 sudo nginx -t
- ```
-Якщо конфігурація правильна, буде відображено повідомлення `syntax is ok` та `test is successful`.
+```
 
-## Перезапуск Nginx
+If the configuration is valid, you will see messages like `syntax is ok` and `test is successful`.
 
-Після внесення змін необхідно перезавантажити Nginx:
+## Restarting Nginx
+
+After making changes, restart Nginx:
 
 ```bash
 sudo systemctl restart nginx
- ```
+```
 
-##
-Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
+---
+
+Materials created with support from the EU Technical Assistance Project "Bangladesh e-governance (BGD)".

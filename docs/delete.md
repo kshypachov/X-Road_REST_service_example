@@ -1,63 +1,64 @@
-## Видалення cервісу вручну
+## Manual Service Removal
 
-**Для того, щоб встановити даний вебсервіс вручну необхідно:**
+**To manually uninstall this web service, follow the steps below:**
 
-### 1. Зупинити вебсервіс:
+### 1. Stop the web service:
 
 ```bash
 sudo systemctl stop fastapi_trembita_service
 ```
 
-### 2. Видалити сервіс із автозапуску:
+### 2. Disable the service from autostart:
 
 ```bash
 sudo systemctl disable fastapi_trembita_service
 ```
 
-### 3. Видалити systemd unit-файл та перезавантажити конфігурацыю системи
+### 3. Remove the systemd unit file and reload the system configuration:
 
 ```bash
 sudo rm /etc/systemd/system/fastapi_trembita_service.service
 sudo systemctl daemon-reload
 ```
 
-### 4. Видалити віртуальне середовище та файлів сервісу
+### 4. Delete the virtual environment and service files:
 
 ```bash
 cd ..
 sudo rm -rf FastAPI_trembita_service
 ```
 
-### 5. Видалити базу даних та користувача:
-5.1.	Увійти у консоль MariaDB:
+### 5. Delete the database and user:
+5.1.	Log into the MariaDB console:
 ```bash
 sudo mysql
 ```
-5.2.	Видалити базу даних:
+5.2.	Delete the database:
 ```sql
 DROP DATABASE IF EXISTS your_db_name;
 ```
-де: `your_db_name` - назва бази даних, яку було створено при встановленні вебсервісу.
+Where `your_db_name` is the name of the database created during web service installation.
 
-5.3.	Видалити користувача БД:
+5.3.	Delete the database user:
 ```sql
 DROP USER IF EXISTS 'your_db_user'@'%';
 ```
-де: `your_db_user` - логін користувача БД, якого було створено при встановленні вебсервісу
+Where `your_db_user` is the username created during web service installation.
 
-5.4.	Вийдти із консолі MariaDB:
+5.4.	Exit the MariaDB console:
 ```sql
 exit
 ```
 
-### 6. Видалити залежності (опціонально):
+### 6. Remove dependencies (optional):
 
 ```bash
 sudo apt-get remove --purge -y curl libmariadb-dev gcc python3 python3-venv python3-dev git mariadb-server
 sudo apt-get autoremove -y
 ```
 
-Після виконання усіх кроків необхідно переконатись, що жодних активних процесів чи файлів, пов’язаних із проєктом, більше немає в системі.
+After completing all steps, make sure there are no active processes or remaining files related to the project in the system.
 
-##
-Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
+---
+
+Materials were prepared with the support of the international technical assistance project "Bangladesh e-governance (BGD)".
