@@ -1,184 +1,154 @@
-# Синхронний REST-сервіс з підтримкою системи «Трембіта»
+# Synchronous REST Service Compatible with the "X-Road" System
 
-REST-сервіс, описаний в даній інструкції, розроблений мовою програмування Python з використанням фреймворку FastAPI і є сумісним з системою «Трембіта».
+The REST service described in this manual is developed in Python using the FastAPI framework and is compatible with the "X-Road" system.
 
-FastAPI – це сучасний, швидкий (високопродуктивний) web-фреймворк для побудови API з Python 3.10+ на основі стандартних асинхронних викликів.
+FastAPI is a modern, fast (high-performance) web framework for building APIs with Python 3.10+, based on standard asynchronous calls.
 
-Даний сервіс передбачає отримання з бази даних (реєстру) відомостей про інформаційні об'єкти (користувачів) та управління їх статусом, у тому числі обробку запитів на пошук, отримання, створення, редагування та видалення об'єктів.
+This service is designed to retrieve information about data objects (users) from a database (registry) and manage their status, including handling requests to search, retrieve, create, update, and delete objects.
 
-Для демонстрації інтеграції з системою «Трембіта» було розроблено [вебклієнт](https://github.com/MadCat-88/Trembita_Py_R_SyncCli) для роботи з даним вебсервісом.
+To demonstrate integration with the "X-Road" system, a [web client](https://github.com/MadCat-88/Trembita_Py_R_SyncCli) was developed to work with this web service.
 
+## Software Requirements
+| Software       | Version   | Note                                                                                                                                                                                                               |
+|:---------------|:---------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Ubuntu Server  | 24.04     | Recommended virtual machine characteristics:<br/> CPU: 1 <br/> RAM: 512 MB                                                                                                                                        |
+| Python         | **3.10!** | Installed automatically via script.<br/>You can also install it manually by selecting the appropriate installation type.<br/>**Important!** If Python version is below 3.10, the service will not work.           |
+| MariaDB        | 10.5+     | Installed automatically via script.<br/>Can also be installed manually by selecting the appropriate installation type.                                                                                             |
+| Git            |           | Required for cloning the repository                                                                                                                                                                                |
 
-## Вимоги до програмного забезпечення 
-| ПЗ            |   Версія   | Примітка                                                                                                                                                                                               |
-|:--------------|:----------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Ubuntu Server |   24.04    | Рекомендовані характеристики віртуальної машини:<br/> CPU: 1 <br/> RAM: 512 Мб                                                                                                                         |
-| Python        | **3.10!**  | За допомогою скрипта встановлюється автоматично.<br/> Також можна встановити вручну при виборі відповідного типу інсталяції.<br/>**Важливо!** Якщо версія Python нижче 3.10, сервіс працювати не буде. |
-| MariaDB       |   10.5+    | За допомогою скрипта встановлюється автоматично.<br/> Також можна встановити вручну при виборі відповідного типу інсталяції                                                                            |
-| Git           |            | Для клонування репозиторію                                                                                                                                                                             |
+## Dependencies
 
+The software dependencies of the web service are listed in the `requirements.txt` file.
 
-## Залежності
+## Project Structure
 
-Залежності програмного забезпечення вебсервісу зазначені в файлі `requirements.txt`.
-
-## Структура проєкту
-
-Структура проєкту виглядає наступним чином:
+The project has the following structure:
 
 ```
-FastAPI_trembita_service/
-├── main.py                # Точка входу застосунку
-├── config.ini             # Конфігурація проєкту
-├── alembic.ini            # Конфігурація міграцій БД
+X-Road_REST_service_example/
+├── main.py                # Application entry point
+├── config.ini             # Project configuration
+├── alembic.ini            # DB migrations configuration
 ├── utils/
-│   ├── validations.py     # Валідація полів повідомлень
-│   ├── update_person.py   # Оновлення запису у БД
-│   ├── get_person.py      # Пошук запису у БД за критерієм
-│   ├── get_all_persons.py # Отримання всіх записів БД
-│   ├── delete_person.py   # Видалення запису з БД
-│   ├── create_person.py   # Створення запису у БД
-│   └── config_utils.py    # Зчитування конфігураційного файлу
+│   ├── validations.py     # Field validation
+│   ├── update_person.py   # Update DB record
+│   ├── get_person.py      # Search DB record by criteria
+│   ├── get_all_persons.py # Retrieve all DB records
+│   ├── delete_person.py   # Delete DB record
+│   ├── create_person.py   # Create DB record
+│   └── config_utils.py    # Read configuration file
 ├── models/
-│   └── person.py          # Моделі даних
+│   └── person.py          # Data models
 ├── migrations/
-│   └── env.py             # Підключення моделей для Alembic
-├── docs/                  # Документація з розгортання
-├── requirements.txt       # Залежності ПЗ вебсервісу
-├── README.md              # Документація
-├── deploy.sh              # Скрипт для автоматизації встановлення
-├── remove.sh              # Скрипт для видалення сервісу та очищення системи
+│   └── env.py             # Alembic model connection
+├── docs/                  # Deployment documentation
+├── requirements.txt       # Web service dependencies
+├── README.md              # Documentation
+├── deploy.sh              # Installation automation script
+├── remove.sh              # Script to remove the service and clean the system
 ```
 
-## Інсталяція сервісу
+## Service Installation
 
-Сервіс можна інсталювати за допомогою скрипта автоматичного встановлення або вручну. Також сервіс може працювати в Docker 
-- [Інсталяція сервісу за допомогою скрипта автоматичного встановлення](./docs/script_installation.md).
-- [Інсталяція сервісу вручну](./docs/manual_installation.md).
-- [Конфігурація сервісу](./docs/configuration.md).
-- [Розгортання вебсервісу в Docker ](./docs/docker_installation.md).
+The service can be installed using an automatic installation script or manually. It can also run in Docker.
 
+- [Automatic installation script](./docs/script_installation.md)
+- [Manual installation](./docs/manual_installation.md)
+- [Service configuration](./docs/configuration.md)
+- [Deploying the web service with Docker](./docs/docker_installation.md)
 
-## Наповнення бази даних тестовими записами
+## Populating the Database with Test Records
 
-Для забезпечення зручності тестування розробленого вебсервісу потрібно наповнити його БД тестовими записами.
-З цією метою було розроблено окремий скрипт, інсталяція та робота з яким описані [тут](https://github.com/MadCat-88/Trembita_PutFakeData_Rest)
+For convenient testing of the developed web service, the database should be populated with test records.  
+#A dedicated script was created for this purpose. Installation and usage are described [here](https://github.com/MadCat-88/Trembita_PutFakeData_Rest).
 
-## Адміністрування сервісу
+## Service Administration
 
-### Запуск вебсервісу
+### Starting the Web Service
 
-Для запуска вебсервісу необхідно виконати наступну команду:
+To start the web service, run the following command:
 
 ```bash
-sudo systemctl start fastapi_trembita_service
+sudo systemctl start x-road_rest_service_example
 ```
 
-### Ознайомлення з документацією АРІ
+### Accessing API Documentation
 
-Після запуску вебсервісу можна отримати доступ до автоматичної **документації API** за наступними адресами:
+Once the web service is running, you can access the automatically generated **API documentation** at:
 
-- Swagger UI: http://[адреса серверу]:8000/docs
-- ReDoc: http://[адреса серверу]:8000/redoc
+- Swagger UI: http://[server-address]:8000/docs  
+- ReDoc: http://[server-address]:8000/redoc
 
-### Перевірка статусу вебсервісу
+### Checking Service Status
 
 ```bash
-sudo systemctl status fastapi_trembita_service
+sudo systemctl status x-road_rest_service_example
 ```
 
-### Зупинка вебсервісу
+### Stopping the Web Service
 
 ```bash
-sudo systemctl stop fastapi_trembita_service
+sudo systemctl stop x-road_rest_service_example
 ```
 
-### Видалення вебсервісу
+### Removing the Web Service
 
-Для видалення вебсервісу та всіх пов'язаних компонентів було створено скрипт `remove.sh`.
-Даний скрипт після запуску, зупинить та видалить вебсервіс, видалить віртуальне середовище, клонований репозиторій та системні залежності.
+To remove the web service and all related components, use the `remove.sh` script.  
+This script will stop and delete the web service, remove the virtual environment, cloned repository, and system dependencies.
 
-Для того, щоб запустити скрипт необхідно:
+To execute the script:
 
-1. Зробити файл виконуваним:
+1. Make the file executable:
 
 ```bash
 chmod +x remove.sh
 ```
 
-2. Запустити скрипт:
+2. Run the script:
 
 ```bash
 ./remove.sh
 ```
 
-Також існує можливість видалення вебсервісу вручну, згідно відповідної [інструкції](/docs/delete.md)
+You can also manually remove the service according to the relevant [instructions](/docs/delete.md).
 
-### Перегляд журналу подій
+### Viewing the Event Log
 
-За замовчуванням журнал подій зберігається у файлі `fastapi_trembita_service.log`.
+By default, the service event log is saved in the file `x-road_rest_service_example.log`.
 
-Конфігурація параметрів журналювання подій виконується в файлі «config.ini». Детальніше з параметрами журналювання в даному файлі можна ознайомитися в [настановах з конфігурації](/docs/configuration.md).
+Logging parameters are configured in the `config.ini` file. More details are available in the [configuration guide](/docs/configuration.md).
 
-Для того, щоб переглянути журнал подій вебсервісу необхідно виконати команду:
+To view the service event log:
 
 ```bash
-journalctl -u fastapi_trembita_service -f
+journalctl -u x-road_rest_service_example -f
 ```
 
-### Налаштування HTTPS
+### HTTPS Configuration
 
-Налаштування підключення до сервісу за протоколом HTTPS наведено [в інструкції](./docs/https_nginx_reverse_proxy.md).
+Instructions for setting up HTTPS using a reverse proxy are provided [here](./docs/https_nginx_reverse_proxy.md).
 
-## Інтеграція вебсервісу з системою «Трембіта»
+## Using the Service
 
-Системи «Трембіта» не вимагає особливої спеціалізації вебсервісів для роботи з нею. Для повноцінної інтеграції з системою «Трембіта» вебсервіс повинен підтримувати можливість зберігання заголовків системи «Трембіта», які було передані в запиті від вебкліента через ШБО.
-В даному вебсервісі за це відповідає наступний фрагмент коду в файлі `main.py`:
+The web service provides 5 methods to manage records of fictional users (Person) in the database:
 
-```
-# Логування всіх заголовків
-headers = dict(request.headers)
-logger.info("Заголовки запиту:")
-for header_key, header_value in headers.items():
-logger.info(f"    {header_key}: {header_value}")
+- [Create a new record](./docs/using.md#person-post)
+- [Retrieve all records from the DB](./docs/using.md#person-get-all)
+- [Update a record by unique identifier (UNZR)](/docs/using.md#person-update)
+- [Retrieve a record by search criteria](./docs/using.md#person-get-by-parameter)
+- [Delete a record by unique identifier (UNZR)](./docs/using.md#person-delete)
 
-# Логування додаткових параметрів запиту Трембити
-if queryId:
-    logger.info(f"Значення параметру запиту queryId: {queryId}")
-if userId:
-    logger.info(f"Значення параметру запиту userId: {userId}")  
-```
+After installing the service, the database is empty.  
+To demonstrate its capabilities, the first step is to create records in the DB. You can do this using the [web client](https://github.com/MadCat-88/Trembita_Py_R_SyncCli), the [Person Post method](./docs/using.md#person-post), or the [test data population script](./README.md#populating-the-database-with-test-records).
 
-де:
-- header_key – заголовок запиту системи «Трембіта»;
-- header_value – значення заголовку.
+## Contribution
 
-Більш детальну інформацію про заголовки наведено в описі [роботи із REST-сервісами в системі «Трембіта»](https://github.com/MadCat-88/Services-development-for-Trembita-system/blob/main/REST%20services%20development%20for%20Trembita%20system.md#%D0%B7%D0%B0%D0%B3%D0%BE%D0%BB%D0%BE%D0%B2%D0%BA%D0%B8-%D0%B7%D0%B0%D0%BF%D0%B8%D1%82%D1%96%D0%B2-%D0%B4%D0%BB%D1%8F-rest-%D1%81%D0%B5%D1%80%D0%B2%D1%96%D1%81%D1%96%D0%B2-%D0%BD%D0%B5%D0%BE%D0%B1%D1%85%D1%96%D0%B4%D0%BD%D1%96-%D0%B7%D0%B0%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B0%D0%B1%D0%B5%D0%B7%D0%BF%D0%B5%D1%87%D0%B5%D0%BD%D0%BD%D1%8F-%D1%81%D1%83%D0%BC%D1%96%D1%81%D0%BD%D0%BE%D1%81%D1%82%D1%96-%D0%B7-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BE%D1%8E-%D1%82%D1%80%D0%B5%D0%BC%D0%B1%D1%96%D1%82%D0%B0).
-- queryId та userId – додаткові параметри запиту, які передаються в URL.
+If you want to contribute to the project, please fork the repository and submit a Pull Request.
 
-- Більш детальну інформацію про додаткові параметри наведено в розділі [Використання сервісу](./docs/using.md).
+## License
 
-## Використання сервісу
+This project is licensed under the MIT License.
 
-Вебсервіс представляє собою набір з 5 методів, які дозволяють управляти записами про умовних користувачів (Person) в БД:
+##
 
-- [створення нового запису](./docs/using.md#person-post);
-- [отримання всіх записів з БД](./docs/using.md#person-get-all);
-- [оновлення існуючого запису за кодом УНЗР](./docs/using.md#person-update);
-- [отримання запису по заданому критерію пошуку](./docs/using.md#person-get-by-parameter);
-- [видалення існуючого запису за кодом УНЗР](././docs/using.md#person-delete).
-
-Після встановлення вебсервісу його база даних порожня. 
-Для демонстрації можливостей вебсервісу першим кроком необхідно створити нові записи в БД. Це можна зробити використовуючи відповідний [вебклієнт](https://github.com/MadCat-88/Trembita_Py_R_SyncCli), з використанням методу [Person Post](./docs/using.md#person-post) або за допомогою [скрипта наповнення бази даних](./README.md#наповнення-бази-даних-тестовими-записами).
-
-
-## Внесок
-
-Якщо ви хочете зробити свій внесок у проєкт, будь ласка, створіть форк репозиторію і відправте Pull Request.
-
-## Ліцензія
-
-Цей проєкт ліцензується відповідно до умов MIT License.
-
- ##
-Матеріали створено за підтримки проєкту міжнародної технічної допомоги «Підтримка ЄС цифрової трансформації України (DT4UA)».
+Materials created with support from the EU Technical Assistance Project "Bangladesh e-governance (BGD)".
