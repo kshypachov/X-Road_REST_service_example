@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Змінні для конфігурації
+# Configuration variables
 PROJECT_DIR="X-Road_REST_service_example"
 VENV_DIR="venv"
 SERVICE_NAME="x-road_rest_service_example"
 CONFIG_FILE="config.ini"
 
-# Функція для зчитування параметрів з config.ini
+# Function to read values from config.ini
 function get_config_value() {
     local section=$1
     local key=$2
@@ -15,48 +15,48 @@ function get_config_value() {
     echo $value
 }
 
-# Отримання параметрів бази даних з config.ini
+# Retrieve database parameters from config.ini
 DB_NAME=$(get_config_value "database" "name" $CONFIG_FILE)
 DB_USER=$(get_config_value "database" "username" $CONFIG_FILE)
 DB_PASSWORD=$(get_config_value "database" "password" $CONFIG_FILE)
 
-# Перевірка, чи скрипт запускається з папки FastAPI_trembita_service
+# Ensure the script is run from inside the FastAPI project directory
 if [ "$(basename "$PWD")" != "$PROJECT_DIR" ]; then
-    echo "Будь ласка, запустіть цей скрипт з директорії $PROJECT_DIR."
+    echo "Please run this script from the $PROJECT_DIR directory."
     exit 1
 fi
 
-# Зупинка та видалення системного сервісу
-echo "Зупинка та видалення системного сервісу..."
+# Stop and remove the systemd service
+echo "Stopping and removing the systemd service..."
 sudo systemctl stop $SERVICE_NAME
 sudo systemctl disable $SERVICE_NAME
 sudo rm /etc/systemd/system/$SERVICE_NAME.service
 sudo systemctl daemon-reload
 sudo systemctl reset-failed
 
-# Видалення віртуального середовища
+# Remove the virtual environment
 if [ -d "$VENV_DIR" ]; then
-    echo "Видалення віртуального середовища..."
+    echo "Removing the virtual environment..."
     rm -rf "$VENV_DIR"
 else
-    echo "Віртуальне середовище не знайдено."
+    echo "Virtual environment not found."
 fi
 
-# Перехід на один рівень вище для видалення клонованого репозиторію
+# Go up one directory to delete the cloned repository
 cd ..
 
-# Видалення клонованого репозиторію
+# Delete the cloned repository
 if [ -d "$PROJECT_DIR" ]; then
-    echo "Видалення клонованого репозиторію..."
+    echo "Removing the cloned repository..."
     rm -rf "$PROJECT_DIR"
 else
-    echo "Клонований репозиторій не знайдено."
+    echo "Cloned repository not found."
 fi
 
-# Видалення бази даних та користувача
-echo "Видалення бази даних та користувача..."
+# Delete the database and user
+echo "Deleting the database and user..."
 sudo mysql -e "DROP DATABASE IF EXISTS $DB_NAME;"
 sudo mysql -e "DROP USER IF EXISTS '$DB_USER'@'%';"
 sudo mysql -e "FLUSH PRIVILEGES;"
 
-echo "Видалення завершено!"
+echo "Removal complete!"

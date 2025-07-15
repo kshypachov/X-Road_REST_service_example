@@ -13,88 +13,84 @@ from utils.config_utils import load_config, get_database_url, configure_logging
 import utils.validation
 from utils import definitions
 
-# Цей сервіс є частиною навчальних матеріалів для розробників системи "Трембіта".
-# Сервіс як приклад логує всі HTTP-заголовки, які отримує з запитами.
-# У промисловому сервісі слід передбачити логування службових заголовків системи "Трембіта".
-# Перелік службових заголовків системи "Трембіта":
-# Uxp-Client
-# Uxp-Service
-# Uxp-Purpose-Ids
-# Uxp-Subject-Id
+# This service is part of the training materials for developers working with the "X-Road" system.
+# As an example, the service logs all HTTP headers received with each request.
+# In production-grade services, only official "X-Road" headers should be logged.
 
 
-# Завантажуємо конфігурацію
+# Load configuration
 try:
     config = load_config('config.ini')
 
-    # Налаштовуємо логування
+    # Configure logging
     configure_logging(config)
 
     logger = logging.getLogger(__name__)
     logger.info("Configuration loaded")
     logger.debug("Debug message")
 
-    # Отримуємо URL бази даних
+    # Get the database URL
     SQLALCHEMY_DATABASE_URL = get_database_url(config)
 except ValueError as e:
     logging.critical(f"Failed to load configuration: {e}")
     exit(1)
 
-# створюємо об'єкт database, який буде використовуватися для виконання запитів
+# Create the database object that will be used for executing queries
 database = databases.Database(SQLALCHEMY_DATABASE_URL)
 
 app = FastAPI()
 
 @app.on_event("startup")
 async def startup():
-    # коли програма запускається встановлюємо з'єднання з БД
+    # On startup, connect to the database
     await database.connect()
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    # коли програма зупиняється розриваємо з'єднання з БД
+    # On shutdown, disconnect from the database
     await database.disconnect()
 
 
-@app.get("/person")  # отримати дані про всіх людей, що містяться у базі заних
+@app.get("/person")  # Get data about all persons in the database
 async def person_get_all(request: Request, queryId: str = None, userId: str = None):
-    logger.debug("Початок обробки запиту GET /person")
+    logger.debug("Start handling GET /person request")
 
-    # Логування всіх заголовків
+    # Log all headers
     headers = dict(request.headers)
-    logger.info("Заголовки запиту:")
+    logger.info("Request headers:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
-    # Логування додаткових параметрів запиту Трембити
+    # Log additional Trembita parameters
     if queryId:
-        logger.info(f"Значення параметру запиту queryId: {queryId}")
+        logger.info(f"Query parameter 'queryId': {queryId}")
     if userId:
-        logger.info(f"Значення параметру запиту userId: {userId}")
+        logger.info(f"Query parameter 'userId': {userId}")
 
     result = await get_all_persons_from_db(database)
-    logger.debug("Обробку запиту GET /person завершено")
+    logger.debug("GET /person request handled")
     return {"message": result}
 
-@app.get("/person/{param}/{value}") # робимо пошук даних за одним з параметрів
-async def person_get_by_parameter(param:str, value: str, request: Request, queryId: str = None, userId: str = None):
-    logger.debug("Початок обробки запиту GET /person/" + str(param) + "/" + str(value))
 
-    # Логування всіх заголовків
+@app.get("/person/{param}/{value}")  # Search person data by one parameter
+async def person_get_by_parameter(param: str, value: str, request: Request, queryId: str = None, userId: str = None):
+    logger.debug("Start handling GET /person/" + str(param) + "/" + str(value))
+
+    # Log all headers
     headers = dict(request.headers)
-    logger.info("Заголовки запиту:")
+    logger.info("Request headers:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
-    # Логування додаткових параметрів запиту Трембити
+    # Log additional Trembita parameters
     if queryId:
-        logger.info(f"Значення параметру запиту queryId: {queryId}")
+        logger.info(f"Query parameter 'queryId': {queryId}")
     if userId:
-        logger.info(f"Значення параметру запиту userId: {userId}")
+        logger.info(f"Query parameter 'userId': {userId}")
 
     if not param.strip() or not value.strip():
-        logger.warning("Один з переданих параметрів не містить значення")
+        logger.warning("One of the parameters is missing a value")
         raise HTTPException(status_code=422, detail="Error in URL path, some values are missing")
 
     try:
@@ -102,72 +98,75 @@ async def person_get_by_parameter(param:str, value: str, request: Request, query
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    search_dict = {param : value}
+    search_dict = {param: value}
     result = await get_person_by_params_from_db(search_dict, database)
     return {"message": result}
 
-@app.post("/person") # створюємо новий запис
-async def person_post(request: Request, person: models.person.PersonCreate, queryId: str = None, userId: str = None):
-    logger.debug("Початок обробки запиту POST /person/ " + str(person))
 
-    # Логування всіх заголовків
+@app.post("/person")  # Create a new person record
+async def person_post(request: Request, person: models.person.PersonCreate, queryId: str = None, userId: str = None):
+    logger.debug("Start handling POST /person/ " + str(person))
+
+    # Log all headers
     headers = dict(request.headers)
-    logger.info("Заголовки запиту:")
+    logger.info("Request headers:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
-    # Логування додаткових параметрів запиту Трембити
+    # Log additional Trembita parameters
     if queryId:
-        logger.info(f"Значення параметру запиту queryId: {queryId}")
+        logger.info(f"Query parameter 'queryId': {queryId}")
     if userId:
-        logger.info(f"Значення параметру запиту userId: {userId}")
+        logger.info(f"Query parameter 'userId': {userId}")
 
     result = await create_person_in_db(dict(person), database)
-    logger.debug("Обробку запиту POST /person/  завершено")
+    logger.debug("POST /person request handled")
     return {"message": result}
 
-@app.put("/person") # оновлюємо запис
-async def person_update(request: Request, person: models.person.PersonUpdate, queryId: str = None, userId: str = None):
-    logger.debug("Початок обробки запиту PUT /person/ " + str(person))
 
-    # Логування всіх заголовків
+@app.put("/person")  # Update an existing person record
+async def person_update(request: Request, person: models.person.PersonUpdate, queryId: str = None, userId: str = None):
+    logger.debug("Start handling PUT /person/ " + str(person))
+
+    # Log all headers
     headers = dict(request.headers)
-    logger.info("Заголовки запиту:")
+    logger.info("Request headers:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
-    # Логування додаткових параметрів запиту Трембити
+    # Log additional Trembita parameters
     if queryId:
-        logger.info(f"Значення параметру запиту queryId: {queryId}")
+        logger.info(f"Query parameter 'queryId': {queryId}")
     if userId:
-        logger.info(f"Значення параметру запиту userId: {userId}")
+        logger.info(f"Query parameter 'userId': {userId}")
 
     update_data = person.dict(exclude_none=True)
     result = await update_person_in_db(update_data, database)
-    logger.debug("Обробку запиту PUT /person/  завершено")
+    logger.debug("PUT /person request handled")
     if result == 0:
-        # немає даних для оновлення
-        return Response(status_code = 204)
+        # No data was updated
+        return Response(status_code=204)
     return {"message": "Person updated successfully"}
 
-@app.delete("/person/{param}/{value}")  # видаляємо запис, необхідно передати УНЗР для того щоб видалити людину
-async def person_delete(param: str, value: str, request: Request, queryId: str = None, userId: str = None):
-    logger.debug("Початок обробки запиту DELETE /person/" + str(param) + "/" + str(value))
 
-    # Логування всіх заголовків
+@app.delete("/person/{param}/{value}")  # Delete a person record using UNZR
+async def person_delete(param: str, value: str, request: Request, queryId: str = None, userId: str = None):
+    logger.debug("Start handling DELETE /person/" + str(param) + "/" + str(value))
+
+    # Log all headers
     headers = dict(request.headers)
-    logger.info("Заголовки запиту:")
+    logger.info("Request headers:")
     for header_key, header_value in headers.items():
         logger.info(f"    {header_key}: {header_value}")
 
-    # Логування додаткових параметрів запиту Трембити
+    # Log additional Trembita parameters
     if queryId:
-        logger.info(f"Значення параметру запиту queryId: {queryId}")
+        logger.info(f"Query parameter 'queryId': {queryId}")
     if userId:
-        logger.info(f"Значення параметру запиту userId: {userId}")
+        logger.info(f"Query parameter 'userId': {userId}")
 
     if not param.strip() or not value.strip():
-        logger.warning("Один з переданих параметрів не містить значення")
+        logger.warning("One of the parameters is missing a value")
         raise HTTPException(status_code=422, detail="Search parameter is missing in request")
 
     try:
@@ -175,11 +174,10 @@ async def person_delete(param: str, value: str, request: Request, queryId: str =
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    delete_person = {param : value}
+    delete_person = {param: value}
     result = await delete_person_in_db(delete_person, database)
-    logger.debug("Обробку запиту DELETE /person/" + str(param) + "/" + str(value) + " завершено")
+    logger.debug("DELETE /person/" + str(param) + "/" + str(value) + " request handled")
     if result == 0:
-        # немає даних для видаленя
-        return Response(status_code = 204)
+        # No data was deleted
+        return Response(status_code=204)
     return {"message": "Person deleted successfully"}
-
