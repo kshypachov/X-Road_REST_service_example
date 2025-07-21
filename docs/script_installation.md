@@ -18,7 +18,7 @@ To automate the installation and setup of the web service, a script named `deplo
 1. Download the script:
 
 ```bash
-wget https://raw.githubusercontent.com/kshypachov/X-Road_REST_service_example/master/deploy.sh
+wget https://raw.githubusercontent.com/kshypachov/X-Road_REST_service_example/master/x-road_rest_service_deploy.sh
 ```
 
 2. Edit the `deploy.sh` script by replacing the values of `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_HOST`, and `DB_PORT` with your actual data, where:
@@ -34,13 +34,13 @@ The script will automatically create and configure the database using the provid
 3. Make the script executable:
 
 ```bash
-chmod +x deploy.sh
+chmod +x x-road_rest_service_deploy.sh
 ```
 
 4. Run the script:
 
 ```bash
-./deploy.sh
+./x-road_rest_service_deploy.sh
 ```
 
 After the script finishes execution, the service will be automatically started and added to system startup.
