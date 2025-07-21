@@ -3,9 +3,11 @@ from fastapi import HTTPException
 import databases
 from sqlalchemy import select, update
 import logging
+from opentelemetry import trace
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
 
 # Function to update data in the database
 async def update_person_in_db(update_data: dict, db: databases.Database):
@@ -19,7 +21,16 @@ async def update_person_in_db(update_data: dict, db: databases.Database):
         .select_from(Person)
         .where(Person.c.unzr == str(update_data.get("unzr")))
     )
-    person = await db.fetch_one(query)
+
+    # Create telemetry span for the UPDATE query
+    with tracer.start_as_current_span("DB: update person by parameter") as span:
+        span.set_attribute("db.system", "mysql")
+        span.set_attribute("db.operation", "UPDATE")
+        span.set_attribute("db.statement", str(query))
+        span.set_attribute("db.table", Person.name)
+        span.set_attribute("app.layer", "database")
+
+        person = await db.fetch_one(query)
 
     # If the record is not found
     if not person:

@@ -3,9 +3,11 @@ from fastapi import HTTPException
 import databases
 from sqlalchemy import select
 import logging
+from opentelemetry import trace
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
 
 # Function to retrieve all records from the database
 async def get_all_persons_from_db(db: databases.Database):
@@ -25,7 +27,15 @@ async def get_all_persons_from_db(db: databases.Database):
     ).select_from(Person)
 
     try:
-        persons = await db.fetch_all(query)
+        # Create telemetry span for the SELECT query
+        with tracer.start_as_current_span("DB: select all persons") as span:
+            span.set_attribute("db.system", "mysql")
+            span.set_attribute("db.operation", "SELECT")
+            span.set_attribute("db.statement", str(query))
+            span.set_attribute("db.table", Person.name)
+            span.set_attribute("app.layer", "database")
+
+            persons = await db.fetch_all(query)
 
         if not persons:
             logger.warning("No records found")
@@ -38,9 +48,9 @@ async def get_all_persons_from_db(db: databases.Database):
         logger.warning("HTTP error occurred: %s", http_error)
         raise http_error
 
-    except databases.DatabaseError as db_error:
-        logger.error("Database error occurred while executing the query: %s", db_error)
-        raise HTTPException(status_code=500, detail="Failed to retrieve person from database")
+    # except databases.DatabaseError as db_error:
+    #     logger.error("Database error occurred while executing the query: %s", db_error)
+    #     raise HTTPException(status_code=500, detail="Failed to retrieve person from database")
 
     except Exception as e:
         logger.error("Unexpected error occurred while retrieving data: %s", e)

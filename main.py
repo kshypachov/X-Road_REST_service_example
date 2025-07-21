@@ -9,7 +9,13 @@ from utils.update_person import update_person_in_db
 from utils.delete_person import delete_person_in_db
 from utils.get_person import get_person_by_params_from_db
 from pydantic import ValidationError
-from utils.config_utils import load_config, get_database_url, configure_logging
+from utils.config_utils import (
+    load_config,
+    get_database_url,
+    configure_logging,
+    load_telemetry_settings,
+    configure_telemetry,
+    instrument_app_with_telemetry)
 import utils.validation
 from utils import definitions
 
@@ -25,9 +31,12 @@ try:
     # Configure logging
     configure_logging(config)
 
+    telemetry_settings = load_telemetry_settings(config)
+    configure_telemetry(telemetry_settings)
+
     logger = logging.getLogger(__name__)
     logger.info("Configuration loaded")
-    logger.debug("Debug message")
+
 
     # Get the database URL
     SQLALCHEMY_DATABASE_URL = get_database_url(config)
@@ -39,6 +48,11 @@ except ValueError as e:
 database = databases.Database(SQLALCHEMY_DATABASE_URL)
 
 app = FastAPI()
+try:
+    instrument_app_with_telemetry(app, telemetry_settings)
+except Exception as e:
+    logger.error(f"Error while loading instrument_app_with_telemetry: {e}")
+
 
 @app.on_event("startup")
 async def startup():

@@ -4,10 +4,11 @@ import databases
 from sqlalchemy import insert, exc
 import logging
 import pymysql
+from opentelemetry import trace
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
-
+tracer = trace.get_tracer(__name__)
 
 # Function to create a new record in the database
 async def create_person_in_db(person_data: dict, db: databases.Database):
@@ -16,10 +17,18 @@ async def create_person_in_db(person_data: dict, db: databases.Database):
     query = insert(Person).values(person_data).returning(Person.c.id)
 
     try:
-        # Execute the database insert query
-        record_id = await db.fetch_one(query)
-        logger.info("Record created with ID: " + str(record_id))
-        return record_id
+        # Create telemetry span for the DB operation
+        async with tracer.start_as_current_span("DB: insert person") as span:
+            span.set_attribute("db.system", "mysql")
+            span.set_attribute("db.operation", "INSERT")
+            span.set_attribute("db.statement", str(query))  # careful with exposing raw SQL
+            span.set_attribute("db.table", Person.name)
+            span.set_attribute("app.layer", "database")
+
+            # Execute the database insert query
+            record_id = await db.fetch_one(query)
+            logger.info("Record created with ID: %s", str(record_id))
+            return record_id
 
     except exc.IntegrityError as ie:
         # Data integrity violation errors

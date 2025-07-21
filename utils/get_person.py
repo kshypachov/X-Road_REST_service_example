@@ -3,9 +3,11 @@ from fastapi import HTTPException
 import databases
 from sqlalchemy import select, and_
 import logging
+from opentelemetry import trace
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
+tracer = trace.get_tracer(__name__)
 
 # Function to search for records by any of the fields
 async def get_person_by_params_from_db(params: dict, db: databases.Database):
@@ -39,7 +41,15 @@ async def get_person_by_params_from_db(params: dict, db: databases.Database):
     )
 
     try:
-        person = await db.fetch_all(query)
+        # Create telemetry span for the SELECT query
+        with tracer.start_as_current_span("DB: select persons by parameter") as span:
+            span.set_attribute("db.system", "mysql")
+            span.set_attribute("db.operation", "SELECT")
+            span.set_attribute("db.statement", str(query))
+            span.set_attribute("db.table", Person.name)
+            span.set_attribute("app.layer", "database")
+
+            person = await db.fetch_all(query)
 
         if not person:
             logger.warning("No record found with parameters %s", params)
