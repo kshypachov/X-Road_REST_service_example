@@ -44,7 +44,7 @@ X-Road_REST_service_example/
 ├── docs/                  # Deployment documentation
 ├── requirements.txt       # Web service dependencies
 ├── README.md              # Documentation
-├── deploy.sh              # Installation automation script
+├── x-road_rest_service_deploy.sh              # Installation automation script
 ├── remove.sh              # Script to remove the service and clean the system
 ```
 
