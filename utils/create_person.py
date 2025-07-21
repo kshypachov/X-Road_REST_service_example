@@ -18,7 +18,7 @@ async def create_person_in_db(person_data: dict, db: databases.Database):
 
     try:
         # Create telemetry span for the DB operation
-        async with tracer.start_as_current_span("DB: insert person") as span:
+        with tracer.start_as_current_span("DB: insert person") as span:
             span.set_attribute("db.system", "mysql")
             span.set_attribute("db.operation", "INSERT")
             span.set_attribute("db.statement", str(query))  # careful with exposing raw SQL
