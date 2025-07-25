@@ -7,7 +7,7 @@ SQLAlchemy==2.0.30
 mariadb==1.1.10
 aiomysql==0.2.0
 uvicorn>=0.31.0
-opentelemetry-instrumentation-openai==0.42.0
+#opentelemetry-instrumentation-openai==0.42.0
 opentelemetry-sdk                   ==1.35.0
 opentelemetry-exporter-otlp-proto-grpc==1.35.0
 opentelemetry-instrumentation-pymysql==0.56b0
